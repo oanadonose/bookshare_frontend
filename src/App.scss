@@ -1,0 +1,23 @@
+
+.header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1em;
+	background-color:rgba(128,128,128,0.6);
+
+	.search-bar {
+		min-width: 50%;
+		height: 3em;
+		background-color: rgba(0, 0, 0, 0.2);
+		border-radius: 1em;
+		border: none;
+		padding: 1em;
+	}
+	.loggedin {
+		min-width: 20%;
+		display: flex;
+		justify-content: space-around;
+	}
+}
