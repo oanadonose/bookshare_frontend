@@ -1,0 +1,19 @@
+@import "./variables.scss";
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em;
+  background-color: #1d2534;
+  font-size: 1.4rem;
+}
+.search-bar {
+  min-width: 50%;
+  height: 3em;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 1em;
+  border: none;
+  padding: 1em;
+}

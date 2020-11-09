@@ -1,0 +1,19 @@
+$tablet-bp: 600px;
+$desktop-bp: 1200px;
+
+$white: #e5efe9;
+$primary-color: #34435e;
+$primary-color-light: #3e5565;
+$secondary-color: #74bfb9;
+$secondary-color-dark: #66b7b8;
+$ternary-color: #e7b266;
+
+@mixin center-horizontal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@mixin oswald-font {
+  font-family: "Oswald", sans-serif;
+}

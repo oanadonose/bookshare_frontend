@@ -1,12 +1,15 @@
-import React from 'react'
-import Account from './Account.js'
+import React from 'react';
+import Account from './Account.js';
+import styles from './Header.module.scss';
 
-export default function Header(props) {
+const Header = (props) => {
 	return (
-		<div className="header">
-			<a href="/">Home</a>
-			<input className="search-bar" type="search" placeholder="Search . . . . "></input>
-			<Account className="account-bar" isLoggedIn="true"/>
+		<div className={styles['header']}>
+			<a href='/'>Home</a>
+			<input className={styles['search-bar']} type='search' placeholder='Search . . . . '></input>
+			<Account className={styles['account-bar']} isLoggedIn='false'/>
 		</div>
 	)
 }
+
+export default Header;

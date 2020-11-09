@@ -1,21 +1,25 @@
-import React from 'react'
+import React from 'react';
+import { BrowserRouter, Route } from 'react-router-dom';
+import LoginPage from '../pages/LoginPage';
+import styles from './Account.module.scss';
 
-export default function Account(props) {
+const Account = (props) => {
 	const isLoggedIn = props.isLoggedIn;
-	if(isLoggedIn) {
+	if(isLoggedIn=='true') {
 		return (
-			<div className="loggedin">	
-				<a href="/">My books</a>
-				<a href="/logout">Logout</a>
+			<div className={styles['loggedin']}>	
+				<a href='/'>My books</a>
+				<a href='/logout'>Logout</a>
 			</div>
 		)
-		}
+	}
 	else {
 		return (
-			<div className="guest">
-				<a href="/register">Register</a>
-				<a href="/login">Login</a>
+			<div className={styles['guest']}>
+				<a href='/register'>Register</a>
+				<a href='/login'>Login</a>
 			</div>
 		)
 	}
 }
+export default Account;

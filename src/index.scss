@@ -1,23 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
-
-@mixin oswald-font {
-	font-family: 'Oswald', sans-serif;
-}
+@import url("https://fonts.googleapis.com/css2?family=Oswald&display=swap");
+@import "./variables.scss";
 
 body {
   margin: 0;
   @include oswald-font;
   font-size: 18px;
+  color: $white;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: darkgrey;
+  background-color: $primary-color;
 }
 
 a {
-	text-decoration: none;
+  text-decoration: none;
+  color: $ternary-color;
+}
+
+button {
+  @include oswald-font;
+  font-size: 1.2rem;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
