@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage';
 import styles from './Account.module.scss';
 
@@ -8,16 +8,16 @@ const Account = (props) => {
 	if(isLoggedIn=='true') {
 		return (
 			<div className={styles['loggedin']}>	
-				<a href='/'>My books</a>
-				<a href='/logout'>Logout</a>
+				<Link to='/'>My books</Link>
+				<Link to='/logout'>Logout</Link>
 			</div>
 		)
 	}
 	else {
 		return (
 			<div className={styles['guest']}>
-				<a href='/register'>Register</a>
-				<a href='/login'>Login</a>
+				<Link to='/register'>Register</Link>
+				<Link to='/login'>Login</Link>
 			</div>
 		)
 	}
