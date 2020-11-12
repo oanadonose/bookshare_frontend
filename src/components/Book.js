@@ -5,10 +5,10 @@ import styles from './Book.module.scss';
 const Book = (props) => {
 	return (
 		<div className={styles['book-card']} onClick={props.onClick}>
-			<img src='https://elyssarpress.com/wp-content/uploads/2019/12/book-cover-placeholder.png'></img>
-			<h3>{props.title}</h3>
-			<h4>{props.author}</h4>
+			<img src={props.photo}></img>
 			<Link to={`/users/${props.user}`}>User</Link>
+			<h4>by {props.author}</h4>
+			<h2>{props.title}</h2>			
 		</div>
 	)
 }

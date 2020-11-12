@@ -34,7 +34,12 @@ const HomePage = () => {
 	return (
 		<div className={styles['home-feed']}>
 			{books.map(item => (
-				<Book key={item.id} title={item.title} author={item.author} user={item.user} onClick={() => clickHandler(item.id)}/>
+				<Book key={item.id} 
+				title={item.title} 
+				author={item.author} 
+				user={item.user}
+				photo={item.photo} 
+				onClick={() => clickHandler(item.id)}/>
 			))}
 		</div>
 	)
