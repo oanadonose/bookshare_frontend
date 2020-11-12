@@ -1,6 +1,8 @@
 import { React, useState } from 'react';
 import Input from '../components/Input';
 import styles from './Forms.module.scss';
+import history from '../history';
+
 
 
 const LoginPage = () => {
@@ -9,11 +11,31 @@ const LoginPage = () => {
 		password: ''
 	});
 
+	const submitHandler = async (e) => {
+		e.preventDefault();
+		try {
+			const res = await fetch('http://localhost:5000/api/users/login', {
+				method: 'POST',
+				headers: {
+					"Content-Type": 'application/json'
+				},
+				body: JSON.stringify(creds)
+			});
+			const data = await res.json();
+			history.push('/');
+			console.log(data,'data');
+			return data
+		} catch(err) {
+			console.log('err', err);
+			history.push('/500');
+		}
+	}
+
 	console.log('creds', creds)
 	return (
 		<div className={styles['form-group']}>
 			<h2>Login</h2>
-			<form className={styles['form']}>
+			<form onSubmit={(e) => submitHandler(e)} className={styles['form']}>
 				<Input 
 					id='login-email'
 					label='Email'

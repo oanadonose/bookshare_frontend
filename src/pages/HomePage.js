@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import Book from '../components/Book';
 import styles from './HomePage.module.scss';
+import history from '../history';
 
 const HomePage = () => {
 	
@@ -24,12 +25,16 @@ const HomePage = () => {
 		fetchData();
 	},[]);
 
+	const clickHandler = (id) => {
+		history.push(`/books/${id}`);
+	}
+
 	console.log(books);
 
 	return (
 		<div className={styles['home-feed']}>
 			{books.map(item => (
-				<Book title={item.title} author={item.author} user={item.user}/>
+				<Book key={item.id} title={item.title} author={item.author} user={item.user} onClick={() => clickHandler(item.id)}/>
 			))}
 		</div>
 	)

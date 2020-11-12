@@ -1,6 +1,7 @@
 import { React, useState } from 'react';
 import Input from '../components/Input';
 import styles from './Forms.module.scss';
+import history from '../history';
 
 
 const RegisterPage = () => {
@@ -10,11 +11,31 @@ const RegisterPage = () => {
 		password: ''
 	});
 
-	console.log('creds', creds)
+	const submitHandler = async (e) => {
+		e.preventDefault();
+		try {
+			await fetch('http://localhost:5000/api/users/register', {
+				method: 'POST',
+				headers: {
+					"Content-Type": 'application/json',
+				},
+				body: JSON.stringify(creds)
+			});
+			//console.log('res', res)
+			//const data = await res.json();
+			history.push('/login');
+			//return data
+			//return res
+		} catch(err) {
+			console.log('err', err);
+			history.push('/500');
+		}
+	}
+
 	return (
 		<div className={styles['form-group']}>
 			<h2>Register</h2>
-			<form className={styles['form']}>
+			<form onSubmit={(e) => submitHandler(e)} className={styles['form']}>
 				<Input 
 					id='register-name'
 					label='Name'
@@ -46,7 +67,7 @@ const RegisterPage = () => {
 					}}
 				/>
 
-				<button type='submit'>Register</button>
+				<button >Register</button>
 			</form>
 		</div>
 	)
