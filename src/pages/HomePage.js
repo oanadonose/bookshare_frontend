@@ -25,8 +25,10 @@ const HomePage = () => {
 		fetchData();
 	},[]);
 
-	const clickHandler = (id) => {
-		history.push(`/books/${id}`);
+	const clickHandler = (id, item) => {
+		console.log('id', id);
+		console.log('item', item);
+		history.push(`/books/${id}`, {item});
 	}
 
 	console.log(books);
@@ -34,12 +36,12 @@ const HomePage = () => {
 	return (
 		<div className={styles['home-feed']}>
 			{books.map(item => (
-				<Book key={item.id} 
+				<Book key={item._id} 
 				title={item.title} 
 				author={item.author} 
 				user={item.user}
 				photo={item.photo} 
-				onClick={() => clickHandler(item.id)}/>
+				onClick={() => clickHandler(item._id, item)}/>
 			))}
 		</div>
 	)

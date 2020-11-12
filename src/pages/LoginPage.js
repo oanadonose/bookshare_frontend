@@ -22,7 +22,8 @@ const LoginPage = () => {
 				body: JSON.stringify(creds)
 			});
 			const data = await res.json();
-			history.push('/');
+			if(data.success) localStorage.setItem('token', data.token);
+			//history.push('/');
 			console.log(data,'data');
 			return data
 		} catch(err) {

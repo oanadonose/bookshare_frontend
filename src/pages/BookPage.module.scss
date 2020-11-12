@@ -1,0 +1,11 @@
+.book-page {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 3em;
+
+  .info-panel {
+    margin-left: 3em;
+    margin-top: 2em;
+  }
+}
