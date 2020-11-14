@@ -1,4 +1,5 @@
 import { React, useState } from 'react';
+import {useAuth} from '../context/auth';
 import Input from '../components/Input';
 import styles from './Forms.module.scss';
 import history from '../history';
@@ -6,6 +7,7 @@ import history from '../history';
 
 
 const LoginPage = () => {
+	const auth = useAuth();
 	const [creds, setCreds] = useState({
 		email: '',
 		password: ''
@@ -24,6 +26,8 @@ const LoginPage = () => {
 			const data = await res.json();
 			if(data.success) {
 				localStorage.setItem('token', data.token);
+				auth.updateToken(data.token)
+				console.log('auth.token', auth.token);
 				//localStorage.setItem('user', data.userid);
 			}
 			//history.push('/');

@@ -1,7 +1,7 @@
 import {React, useState} from 'react';
-import { Router, Route } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
-import { AuthContext } from './context/auth';
+import { AuthContext, useAuth } from './context/auth';
 import './App.scss';
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
@@ -15,18 +15,24 @@ import history from './history';
 const App = () => {
 
 	const [token, setToken] = useState(localStorage.getItem('token')||'');
+	console.log('token', token);
+	const updateToken = (value) => {
+		setToken(value);
+	}
 
 	return (
-		<AuthContext.Provider value={{token}}>
+		<AuthContext.Provider value={{token, updateToken}}>
 			<Router history={history}>
 				<div className="App">
 					<Header></Header>
-					<Route path="/" exact component={HomePage}></Route>
-					<Route path="/login" exact component={LoginPage}></Route>
-					<Route path="/register" exact component={RegisterPage}></Route>
-					<Route path="/books/:id" exact component={BookPage}></Route>
-					<PrivateRoute path="/private" exact component={UserPage}></PrivateRoute>
-					<PrivateRoute path="/book/add" exact component={AddBookPage}></PrivateRoute>
+					<Switch>
+						<Route path="/" exact component={HomePage}></Route>
+						<Route path="/login" exact component={LoginPage}></Route>
+						<Route path="/register" exact component={RegisterPage}></Route>
+						<Route path="/books/:id" exact children={<BookPage/>}></Route>
+						<PrivateRoute path="/private" exact component={UserPage}></PrivateRoute>
+						<PrivateRoute path="/book/add" exact component={AddBookPage}></PrivateRoute>
+					</Switch>
 				</div>
 			</Router>
 		</AuthContext.Provider>

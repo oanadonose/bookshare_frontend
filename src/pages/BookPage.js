@@ -1,44 +1,53 @@
-import { React, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { React, useState, useEffect} from 'react';
+import { Link, useParams } from 'react-router-dom';
 import styles from './BookPage.module.scss';
 import { useAuth } from '../context/auth';
 const BookPage = (props) => {
 	const auth = useAuth();
-	const [bookInfo, setBookInfo] = useState('');
-	
-	if(props.location.state) {
-		setBookInfo(props.location.state.item);
+	const initialBookInfo = {
+		title: '',
+		author: '',
+		isbn: '',
+		genre: '',
+		photo: {
+			data: '',
+			contentType: ''
+		}
 	}
+	const [bookInfo, setBookInfo] = useState(initialBookInfo);
+	const { id  } = useParams();
+	console.log('id', id);
 	
-	
-	const [bookOwnerName, setBookOwnerName] = useState('');
 
-	//const getUserInfo = async (id) => {
-	//	let userInfo='invalid user';
-	//	const res = await fetch(`http://localhost:5000/api/users/${id}`, {
-	//		headers: {
-	//			"Authorization": auth.token
-	//		},
-	//	});
-	//	if(res.ok) {
-	//		userInfo = await res.json();
-	//		setBookOwnerName(userInfo.name);
-	//	}
-	//	return userInfo;
-	//}
+	const getBookInfo = async (id) => {
+		const res = await fetch(`http://localhost:5000/api/books/${id}`, {
+			headers: {
+				"Authorization": auth.token
+			},
+		});
+		console.log('res', res)
+		if(res.ok) {
+			const bookData = await res.json();
+			return bookData;
+		}		
+	}
 
-	//getUserInfo(bookInfo.user);
+	useEffect(() => {
+		const fetchData = async (id) => {
+			const data = await getBookInfo(id);
+			setBookInfo(data);
+		}
+		fetchData(id);
+	}, [id]);
 
 	return (
 		<div className={styles['book-page']}>
-			{/*<img src={`${bookInfo.photo}`}/>*/}
+			<img src={`data:${bookInfo.photo.contentType};base64,${bookInfo.photo.data}`}/>
 			<div className={styles['info-panel']}>
 				<h1>{bookInfo.title}</h1>
 				<h2>{bookInfo.author}</h2>
 				<p>ISBN: {bookInfo.ISBN}</p>
 				<p>Genre: {bookInfo.genre}</p>
-				<a href="/">{}</a>
-				<Link to={`/users/${bookInfo.user}`}>Uploaded by {bookOwnerName}</Link>
 			</div>
 		</div>
 	)
