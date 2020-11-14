@@ -2,42 +2,13 @@ import { React, useState } from 'react';
 import Input from '../components/Input';
 import styles from './Forms.module.scss';
 import { useAuth } from '../context/auth';
+import bookGenres from '../helpers/bookGenres';
 
 const AddBookPage = (props) => {
-	const [form, setForm] = useState(new FormData());
 	const auth = useAuth();
-	const bookGenres = [
-		{ value: 'biography',
-		  text: 'Biography'
-		},
-		{ value: 'crime',
-		  text: 'Crime'
-		},
-		{ value: 'fiction',
-		  text: 'Fiction'
-		},
-		{ value: 'history',
-		  text: 'History'
-		},
-		{ value: 'poetry',
-		  text: 'Poetry'
-		},
-		{ value: 'romance',
-		  text: 'Romance'
-		},
-		{ value: 'science fiction',
-		  text: 'Science fiction'
-		},
-		{ value: 'thriller',
-		  text: 'Thriller'
-		},
-		{ value: 'horror',
-		  text: 'Horror'
-		},
-		{ value: 'fantasy',
-		  text: 'Fantasy'
-		},
-	];
+	const [form, setForm] = useState(new FormData());
+	
+	
 	const initialBookInfo = {
 		title: '',
 		author: '',
@@ -65,7 +36,7 @@ const AddBookPage = (props) => {
 				},
 				body: form
 			});
-			console.log('res', res)
+			console.log('res', res);
 		} catch (err) {
 			console.log('err', err)
 			return err;
@@ -110,27 +81,8 @@ const AddBookPage = (props) => {
 				files={bookInfo.photo}
 				onChangeHandler={(e) => {
 					const file = e.target.files[0];
-					console.log('file', file);
 					form.append('photo', file);
-					setBookInfo({ ...bookInfo, photo: file});
-					console.log('bookInfo', bookInfo);
-					
-					for (let value of form.values()) {
-						console.log(value, 'value'); 
-					}
-
-					//const param = e.target.files[0];
-					//let reader = new FileReader();
-					//reader.readAsDataURL(param);
-					//console.log('reader', reader);
-					//let reslog = '';
-					//reader.onload = (e) => {
-					//	console.log('reader.result', reader.result);
-					//	console.log('reader.result.type', typeof(reader.result));
-					//	reslog = reader.result;
-					//	setBookInfo({ ...bookInfo, photo: reslog, photoType: param.type});
-					//}
-					
+					setBookInfo({ ...bookInfo, photo: file});			
 				}}
 				/>
 				<Input id='book-genre'
