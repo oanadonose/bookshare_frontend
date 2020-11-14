@@ -22,9 +22,11 @@ const LoginPage = () => {
 				body: JSON.stringify(creds)
 			});
 			const data = await res.json();
-			if(data.success) localStorage.setItem('token', data.token);
+			if(data.success) {
+				localStorage.setItem('token', data.token);
+				//localStorage.setItem('user', data.userid);
+			}
 			//history.push('/');
-			console.log(data,'data');
 			return data
 		} catch(err) {
 			console.log('err', err);

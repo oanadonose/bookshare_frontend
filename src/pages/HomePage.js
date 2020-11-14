@@ -40,7 +40,7 @@ const HomePage = () => {
 				title={item.title} 
 				author={item.author} 
 				user={item.user}
-				photo={item.photo} 
+				photo={`data:image/jpeg;base64,${item.photo.data}`} 
 				onClick={() => clickHandler(item._id, item)}/>
 			))}
 		</div>

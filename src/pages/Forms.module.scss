@@ -9,6 +9,17 @@
   @include center-horizontal;
   width: 75%;
 
+  select {
+    background-color: #242f42;
+    border: none;
+    border-radius: 0.5em;
+    width: 40%;
+    height: 3em;
+    margin: 1em;
+    color: white;
+    @include oswald-font;
+  }
+
   input {
     background-color: #242f42;
     border: none;

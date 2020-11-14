@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import UserPage from './pages/UserPage';
 import BookPage from './pages/BookPage';
+import AddBookPage from './pages/AddBookPage';
 import history from './history';
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
 					<Route path="/register" exact component={RegisterPage}></Route>
 					<Route path="/books/:id" exact component={BookPage}></Route>
 					<PrivateRoute path="/private" exact component={UserPage}></PrivateRoute>
+					<PrivateRoute path="/book/add" exact component={AddBookPage}></PrivateRoute>
 				</div>
 			</Router>
 		</AuthContext.Provider>
