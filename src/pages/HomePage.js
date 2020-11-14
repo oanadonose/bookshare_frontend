@@ -37,7 +37,7 @@ const HomePage = () => {
 			{books.map(item => (
 				<Book item={item}
 				key={item._id}
-				photo={`data:image/jpeg;base64,${item.photo.data}`} 
+				photo={`data:${item.photo.contentType};base64,${item.photo.data}`} 
 				onClick={() => clickHandler(item)}/>
 			))}
 		</div>

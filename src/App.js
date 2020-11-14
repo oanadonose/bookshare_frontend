@@ -30,7 +30,7 @@ const App = () => {
 						<Route path="/login" exact component={LoginPage}></Route>
 						<Route path="/register" exact component={RegisterPage}></Route>
 						<Route path="/books/:id" exact children={<BookPage/>}></Route>
-						<PrivateRoute path="/private" exact component={UserPage}></PrivateRoute>
+						<Route path="/user/:id/books" exact children={<UserPage/>}></Route>
 						<PrivateRoute path="/book/add" exact component={AddBookPage}></PrivateRoute>
 					</Switch>
 				</div>

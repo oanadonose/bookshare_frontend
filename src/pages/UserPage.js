@@ -1,41 +1,67 @@
 import { React, useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Book from '../components/Book';
 import styles from './HomePage.module.scss';
 import history from '../history';
 
-const HomePage = () => {
+const UserPage = () => {
+	const [userInfo, setUserInfo] = useState({
+		name: '',
+		email: '',
+	});
+	const [userBooks, setUserBooks] = useState([]);
+	console.log('userInfo', userInfo);
+	console.log('userBooks', userBooks);
+
+	const { id } = useParams();
+
 	
-	//const [books, setBooks] = useState([]);
+	const fetchBooks = async (userid) => {
+		const res = await fetch(`http://localhost:5000/api/users/${userid}/books`);
+		const data = await res.json();
+		console.log('data', data);
+		return data;
+	}
+	const fetchUserInfo = async (id) => {
+		const res = await fetch(`http://localhost:5000/api/users/${id}`);
+		console.log(`http://localhost:5000/api/users/${id}`);
+		const data = await res.json();
+		console.log('data', data);
+		return data;
+	}
 
-	//console.log('books', books);
-	//const getData = async () => {
-	//	try {
-	//		const res = await fetch('http://localhost:5000/api/books');
-	//		const data = await res.json();
-	//		return data
-	//	} catch(err) {
-	//		console.log('err', err)
-	//	}
-	//}
-	//useEffect(() => {
-	//	const fetchData = async () => {
-	//		const data = await getData();
-	//		setBooks(data);
-	//	}
-	//	fetchData();
-	//},[]);
+	const clickHandler = (item) => {
+		console.log('item', item);
+		history.push(`/books/${item._id}`);
+	}
+	const fetchUserBooks = async (userid) => {
+		const userBooks = await fetchBooks(userid);
+		setUserBooks(userBooks);
+	}
+	const fetchData = async (userid) => {
+		const res = await fetchUserInfo(userid);
+		setUserInfo({name: res.name, email: res.email});
+	}
 
-	//const clickHandler = (id) => {
-	//	history.push(`/books/${id}`);
-	//}
-
-	//console.log(books);
+	useEffect(() => {
+		fetchData(id);	
+		fetchUserBooks(id);
+	}, []);
 
 	return (
-		<>
-			<h1>PRIVATE</h1>
-		</>
+		<div className={styles['home-feed']}>
+			<div className={styles['info-panel']}>
+				<h2>Username: {userInfo.name}</h2>
+				<h2>Email: {userInfo.email}</h2>
+			</div>
+			{userBooks.map(item => (
+				<Book item={item}
+				key={item._id}
+				photo={`data:${item.photo.contentType};base64,${item.photo.data}`} 
+				onClick={() => clickHandler(item)}/>
+			))}
+		</div>
 	)
 }
 
-export default HomePage;
+export default UserPage;
