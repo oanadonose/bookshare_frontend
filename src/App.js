@@ -35,6 +35,7 @@ const App = () => {
 						<Route path="/register" exact component={RegisterPage}></Route>
 						<Route path="/books/:id" exact children={<BookPage/>}></Route>
 						<Route path="/user/:id" exact children={<UserPage/>}></Route>
+						<PrivateRoute path="/user/:id/edit" exact children={<RegisterPage/>}></PrivateRoute>
 						<PrivateRoute path="/book/add" exact component={AddBookPage}></PrivateRoute>
 						<PrivateRoute path="/book/add/:id" exact component={AddBookPage}></PrivateRoute>
 					</Switch>

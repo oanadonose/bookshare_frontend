@@ -14,14 +14,14 @@ const AddBookPage = (props) => {
 	const initialBookInfo = {
 		title: '',
 		author: '',
-		isbn: '',
+		ISBN: '',
 		genre: '',
 		photo: {}
 	}
 
 	const [bookInfo, setBookInfo] = useState(initialBookInfo);
 	console.log('auth.userId', auth.userId);
-	console.log('bookInfo.user', bookInfo.user);
+	console.log('bookInfo', bookInfo);
 	const { id  } = useParams();
 	console.log('id', id);
 
@@ -31,7 +31,7 @@ const AddBookPage = (props) => {
 				const data = await getBookInfo(id);
 				setBookInfo({
 					...data,
-					isbn: data.isbn || ''
+					ISBN: data.ISBN || ''
 				});
 			}
 			fetchData(id);
@@ -61,7 +61,7 @@ const AddBookPage = (props) => {
 			const form = new FormData();
 			form.append('title', bookInfo.title);
 			form.append('author', bookInfo.author);
-			form.append('isbn', bookInfo.isbn);
+			form.append('isbn', bookInfo.ISBN);
 			form.append('genre', bookInfo.genre);
 			form.append('photo', bookInfo.photo);
 			for (let value of form.values()) {
@@ -83,8 +83,31 @@ const AddBookPage = (props) => {
 		}
 	}
 
-	const updateHandler = async () => {
+	const updateHandler = async (e) => {
+		e.preventDefault();
 		console.log('update', id);
+		try {
+			const form = new FormData();
+			form.append('title', bookInfo.title);
+			form.append('author', bookInfo.author);
+			bookInfo.ISBN && form.append('isbn', bookInfo.ISBN);
+			form.append('genre', bookInfo.genre);
+			if(bookInfo.photo) form.append('photo', bookInfo.photo);
+			const res = await fetch(`http://localhost:5000/api/books/${id}`,{
+				method: 'PUT',
+				headers: { 
+					'Authorization': auth.token
+				},
+				body: form
+			});
+			const data = await res.json();
+			console.log('data', data);
+			if(res.ok) {
+				history.push('/');
+			}
+			} catch (err) {
+				console.log('err', err);
+			}
 	}
 	return (
 		<div className={styles['form-group']}>
@@ -111,9 +134,9 @@ const AddBookPage = (props) => {
 				label='ISBN'
 				type='text'
 				required={false}
-				value={bookInfo.isbn}
+				value={bookInfo.ISBN}
 				onChangeHandler={(e) => {
-					setBookInfo({ ...bookInfo, isbn: e.target.value })
+					setBookInfo({ ...bookInfo, ISBN: e.target.value })
 				}}
 				/>
 				<Input id='book-photo'
@@ -134,11 +157,11 @@ const AddBookPage = (props) => {
 				required={false}
 				value={bookInfo.genre}
 				onChangeHandler={(e) => {
-					setBookInfo({ ...bookInfo, genre: e.target.value })
+					setBookInfo({ ...bookInfo, genre: e.target.value });
 				}}
 				/>
 				{!id && <button type='submit'>Add book</button>}
-				{id && <button onClick = { () => updateHandler()}>Update book</button>}
+				{id && <button type="button" onClick = { (e) => updateHandler(e) }>Update book</button>}
 			</form>
 		</div>
 	)

@@ -1,13 +1,18 @@
 import { React, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { useAuth } from '../context/auth';
 import Book from '../components/Book';
 import styles from './HomePage.module.scss';
 import history from '../history';
 
 const UserPage = () => {
+
+	const auth = useAuth();
+
 	const [userInfo, setUserInfo] = useState({
 		name: '',
 		email: '',
+		address: ''
 	});
 	const [userBooks, setUserBooks] = useState([]);
 	console.log('userInfo', userInfo);
@@ -40,7 +45,7 @@ const UserPage = () => {
 	}
 	const fetchData = async (userid) => {
 		const res = await fetchUserInfo(userid);
-		setUserInfo({name: res.name, email: res.email});
+		setUserInfo({name: res.name, email: res.email, address: res.address});
 	}
 
 	useEffect(() => {
@@ -53,6 +58,10 @@ const UserPage = () => {
 			<div className={styles['info-panel']}>
 				<h2>Username: {userInfo.name}</h2>
 				<h2>Email: {userInfo.email}</h2>
+				{auth.userId === id && <h3>Address: {userInfo.address}</h3>}
+				<div className={styles['owner-actions']}>
+					<Link to={`/user/${id}/edit`}>Update user details</Link>
+				</div>
 			</div>
 			{userBooks.map(item => (
 				<Book item={item}
