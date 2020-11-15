@@ -26,11 +26,11 @@ const LoginPage = () => {
 			const data = await res.json();
 			if(data.success) {
 				localStorage.setItem('token', data.token);
-				auth.updateToken(data.token)
-				console.log('auth.token', auth.token);
-				//localStorage.setItem('user', data.userid);
+				auth.updateToken(data.token);
+				localStorage.setItem('userid', data.userid);
+				auth.updateUserId(data.userid);
 			}
-			//history.push('/');
+			history.push('/');
 			return data
 		} catch(err) {
 			console.log('err', err);

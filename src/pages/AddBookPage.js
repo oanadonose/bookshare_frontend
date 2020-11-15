@@ -1,13 +1,15 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import Input from '../components/Input';
 import styles from './Forms.module.scss';
+import history from '../history';
 import { useAuth } from '../context/auth';
 import bookGenres from '../helpers/bookGenres';
 
 const AddBookPage = (props) => {
+
 	const auth = useAuth();
 	const [form, setForm] = useState(new FormData());
-	
 	
 	const initialBookInfo = {
 		title: '',
@@ -15,6 +17,42 @@ const AddBookPage = (props) => {
 		isbn: '',
 		genre: '',
 		photo: {}
+	}
+
+	const [bookInfo, setBookInfo] = useState(initialBookInfo);
+	console.log('auth.userId', auth.userId);
+	console.log('bookInfo.user', bookInfo.user);
+	const { id  } = useParams();
+	console.log('id', id);
+
+	useEffect(() => {
+		if(id) {
+			const fetchData = async (id) => {
+				const data = await getBookInfo(id);
+				setBookInfo({
+					...data,
+					isbn: data.isbn || ''
+				});
+			}
+			fetchData(id);
+		}
+		return () => {
+			setBookInfo(initialBookInfo);
+		}
+	}, [id]);
+	
+
+	const getBookInfo = async (id) => {
+		const res = await fetch(`http://localhost:5000/api/books/${id}`, {
+			headers: {
+				"Authorization": auth.token
+			},
+		});
+		console.log('res', res)
+		if(res.ok) {
+			const bookData = await res.json();
+			return bookData;
+		}		
 	}
 
 	const submitHandler = async (e) => {
@@ -36,14 +74,18 @@ const AddBookPage = (props) => {
 				},
 				body: form
 			});
-			console.log('res', res);
+			if(res.ok) {
+				history.push('/');
+			}
 		} catch (err) {
 			console.log('err', err)
 			return err;
 		}
 	}
-	const [bookInfo, setBookInfo] = useState(initialBookInfo);
-	console.log('bookInfo', bookInfo)
+
+	const updateHandler = async () => {
+		console.log('update', id);
+	}
 	return (
 		<div className={styles['form-group']}>
 			<form encType="multipart/form-data" onSubmit={(e) => submitHandler(e)} className={styles['form']}>
@@ -95,7 +137,8 @@ const AddBookPage = (props) => {
 					setBookInfo({ ...bookInfo, genre: e.target.value })
 				}}
 				/>
-				<button type='submit'>Add book</button>
+				{!id && <button type='submit'>Add book</button>}
+				{id && <button onClick = { () => updateHandler()}>Update book</button>}
 			</form>
 		</div>
 	)

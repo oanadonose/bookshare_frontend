@@ -17,14 +17,16 @@ const Account = (props) => {
 			}
 		});
 		localStorage.removeItem('token');
-		localStorage.removeItem('user');
+		localStorage.removeItem('userid');
 		auth.updateToken('');
+		auth.updateUserId('');
 		console.log('res', res);		
 	}
 	if(props.isLoggedIn) {
 		return (
 			<div className={styles['loggedin']}>	
-				<Link to='/'>My books</Link>
+				<Link to='/book/add'>Add book</Link>
+				<Link to={`/user/${auth.userId}`}>My books</Link>
 				<button onClick={clickHandler}>Logout</button>
 			</div>
 		)

@@ -15,13 +15,17 @@ import history from './history';
 const App = () => {
 
 	const [token, setToken] = useState(localStorage.getItem('token')||'');
-	console.log('token', token);
+	const [userId, setUserId] = useState(localStorage.getItem('userid')||'');
+	console.log('userid', userId);
 	const updateToken = (value) => {
 		setToken(value);
 	}
+	const updateUserId = (value) => {
+		setUserId(value);
+	}
 
 	return (
-		<AuthContext.Provider value={{token, updateToken}}>
+		<AuthContext.Provider value={{token, updateToken, userId, updateUserId}}>
 			<Router history={history}>
 				<div className="App">
 					<Header></Header>
@@ -30,8 +34,9 @@ const App = () => {
 						<Route path="/login" exact component={LoginPage}></Route>
 						<Route path="/register" exact component={RegisterPage}></Route>
 						<Route path="/books/:id" exact children={<BookPage/>}></Route>
-						<Route path="/user/:id/books" exact children={<UserPage/>}></Route>
+						<Route path="/user/:id" exact children={<UserPage/>}></Route>
 						<PrivateRoute path="/book/add" exact component={AddBookPage}></PrivateRoute>
+						<PrivateRoute path="/book/add/:id" exact component={AddBookPage}></PrivateRoute>
 					</Switch>
 				</div>
 			</Router>
