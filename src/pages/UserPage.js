@@ -15,8 +15,8 @@ const UserPage = () => {
 		address: ''
 	});
 	const [userBooks, setUserBooks] = useState([]);
-	console.log('userInfo', userInfo);
-	console.log('userBooks', userBooks);
+
+	const [requests, setRequests] = useState([]);
 
 	const { id } = useParams();
 
@@ -24,21 +24,23 @@ const UserPage = () => {
 	const fetchBooks = async (userid) => {
 		const res = await fetch(`http://localhost:5000/api/users/${userid}/books`);
 		const data = await res.json();
-		console.log('data', data);
 		return data;
 	}
 	const fetchUserInfo = async (id) => {
 		const res = await fetch(`http://localhost:5000/api/users/${id}`);
-		console.log(`http://localhost:5000/api/users/${id}`);
 		const data = await res.json();
-		console.log('data', data);
 		return data;
 	}
 
-	const clickHandler = (item) => {
-		console.log('item', item);
-		history.push(`/books/${item._id}`);
+	const fetchUserMadeRequests = async (id) => {
+		const res = await fetch(`http://localhost:5000/api/requests/${id}/made`, {
+			headers: { 'Authorization': auth.token }
+		});
+		const data = await res.json();
+		return data;
 	}
+
+
 	const fetchUserBooks = async (userid) => {
 		const userBooks = await fetchBooks(userid);
 		setUserBooks(userBooks);
@@ -46,12 +48,19 @@ const UserPage = () => {
 	const fetchData = async (userid) => {
 		const res = await fetchUserInfo(userid);
 		setUserInfo({name: res.name, email: res.email, address: res.address});
+		const requestsData = await fetchUserMadeRequests(userid);
+		console.log('requestsData', requestsData)
+		setRequests(requestsData);
 	}
 
 	useEffect(() => {
 		fetchData(id);	
 		fetchUserBooks(id);
 	}, []);
+
+	const clickHandler = (item) => {
+		history.push(`/books/${item._id}`);
+	}
 
 	return (
 		<div className={styles['home-feed']}>
@@ -63,12 +72,25 @@ const UserPage = () => {
 					<Link to={`/user/${id}/edit`}>Update user details</Link>
 				</div>
 			</div>
-			{userBooks.map(item => (
-				<Book item={item}
-				key={item._id}
-				photo={`data:${item.photo.contentType};base64,${item.photo.data}`} 
-				onClick={() => clickHandler(item)}/>
-			))}
+			<div className={styles['books-panel']}>
+				{userBooks.map(item => (
+					<Book item={item}
+					key={item._id}
+					photo={`data:${item.photo.contentType};base64,${item.photo.data}`} 
+					onClick={() => clickHandler(item)}/>
+				))}
+			</div>
+			{auth.userId===id && (
+				<div className={styles['requests-panel']}>
+					<h3>Requests Made</h3>
+					{requests.map(request => (
+						<div>
+							<a href={`../books/${request.bookId}#request-${request._id}`}>by {request.userId.name}</a>
+						</div>
+					))}
+				</div>
+			)}
+			
 		</div>
 	)
 }

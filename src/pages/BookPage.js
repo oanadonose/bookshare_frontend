@@ -12,6 +12,7 @@ const BookPage = (props) => {
 		isbn: '',
 		genre: '',
 		user: '',
+		requests: [],
 		photo: {
 			data: '',
 			contentType: ''
@@ -30,7 +31,7 @@ const BookPage = (props) => {
 				"Authorization": auth.token
 			},
 		});
-		console.log('res', res)
+		
 		if(res.ok) {
 			const bookData = await res.json();
 			return bookData;
@@ -62,20 +63,43 @@ const BookPage = (props) => {
 	}, []);
 
 	return (
-		<div className={styles['book-page']}>
-			<img alt='book-cover' src={`data:${bookInfo.photo.contentType ? bookInfo.photo.contentType : 'image/png'};base64,${bookInfo.photo.data ? bookInfo.photo.data : placeholder}`}/>
-			<div className={styles['info-panel']}>
-				<h1>{bookInfo.title}</h1>
-				<h2>{bookInfo.author}</h2>
-				<p>ISBN: {bookInfo.ISBN}</p>
-				<p>Genre: {bookInfo.genre}</p>
-				<Link to={`/user/${bookInfo.user}`}>Owner</Link>
-				{auth.userId === bookInfo.user && <div className={styles['owner-actions']}>
-					<button onClick={() => deleteHandler()}>Delete book</button>
-					<Link to={`/book/add/${id}`}>Update book</Link>
-				</div>}
+		<>
+			<div className={styles['book-page']}>
+				<img alt='book-cover' src={`data:${bookInfo.photo.contentType ? bookInfo.photo.contentType : 'image/png'};base64,${bookInfo.photo.data ? bookInfo.photo.data : placeholder}`}/>
+				<div className={styles['info-panel']}>
+					<h1>{bookInfo.title}</h1>
+					<h2>{bookInfo.author}</h2>
+					<p>ISBN: {bookInfo.ISBN}</p>
+					<p>Genre: {bookInfo.genre}</p>
+					<Link to={`/user/${bookInfo.user._id}`}>Owner</Link>
+					{auth.userId === bookInfo.user && <div className={styles['owner-actions']}>
+						<button onClick={() => deleteHandler()}>Delete book</button>
+						<Link to={`/book/add/${id}`}>Update book</Link>
+					</div>}
+				</div>
 			</div>
-		</div>
+			<div className={styles['requests']}>
+				<h2>Requests: </h2>
+				
+				{bookInfo.requests.map(request => {
+					const header = (
+						<div id={`request-${request._id}`} key={`request-${request._id}`} className={styles['request-bubble']}>
+							<p>{request._id}</p>
+						</div>
+					);
+					const messages = request.messages.map(message => {
+						return <p>{message.text}</p>
+					});
+					return (
+						<div>
+							{header}
+							{messages}
+						</div>
+					);
+					})
+				}
+			</div>
+		</>
 	)
 }
 
