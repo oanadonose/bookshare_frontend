@@ -26,7 +26,7 @@ const Account = (props) => {
 		return (
 			<div className={styles['loggedin']}>	
 				<Link to='/book/add'>Add book</Link>
-				<Link to={`/user/${auth.userId}`}>My books</Link>
+				<Link to={`/user/${auth.userId}`}>My profile</Link>
 				<button onClick={clickHandler}>Logout</button>
 			</div>
 		)

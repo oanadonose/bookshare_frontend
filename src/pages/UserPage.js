@@ -16,7 +16,14 @@ const UserPage = () => {
 	});
 	const [userBooks, setUserBooks] = useState([]);
 	console.log(userBooks, 'userBooks');
-
+	const initialRequestData = {
+		archived: false,
+		messages: [],
+		status: '',
+		user: '',
+		_id: '',
+		book: {}
+	}
 	const [userMadeRequests, setUserMadeRequests] = useState([]);
 	const [userReceivedRequests, setUserReceivedRequests] = useState([]);
 
@@ -39,6 +46,7 @@ const UserPage = () => {
 			headers: { 'Authorization': auth.token }
 		});
 		const data = await res.json();
+		console.log('data', data);
 		return data;
 	}
 	const fetchUserReceivedRequests = async (id) => {
@@ -95,15 +103,17 @@ const UserPage = () => {
 			{auth.userId===id && (
 				<div className={styles['requests-panel']}>
 					<h3>Requests Made</h3>
-					{userMadeRequests.map(request => (
-						<div>
-							{/*<a href={`../request/${request._id}`}>for {request.book.title}</a>*/}
+					{userMadeRequests.map(request => {
+						console.log('request', request);
+						return (
+						<div key={request._id}>
+							<a href={`../request/${request._id}`}>[{request.status}] for {request.book.title}</a>
 						</div>
-					))}
+					)})}
 					<h3>Requests Received</h3>
 					{userReceivedRequests.map(request => (
-						<div>
-							<a href={`../request/${request._id}`}>by {request.user.name}</a>
+						<div key={request._id}>
+							<a href={`../request/${request._id}`}>[{request.status}] by {request.user.name}</a>
 						</div>
 					))}
 				</div>

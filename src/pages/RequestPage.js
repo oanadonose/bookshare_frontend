@@ -7,6 +7,7 @@ import { placeholder } from '../helpers/bookPhotoPlaceholder';
 
 const RequestPage = (props) => {
 	const auth = useAuth();
+	console.log('auth.userId', auth.userId);
 	
 	const { id  } = useParams();
 	console.log('id', id);
@@ -73,9 +74,8 @@ const RequestPage = (props) => {
 				body
 			});
 			const data = await res.json();
-			if(data.success) {
-				console.log(data);
-			}
+			console.log(data);
+			setRequestData(data);
 			return data;
 		} catch (err) {
 			console.log('err', err);
@@ -88,7 +88,7 @@ const RequestPage = (props) => {
 			setRequestData(data);
 		}
 		fetchData(id);
-	}, [didAction]);
+	}, []);
 
 	const cancelHandler = async () => {
 		const body= JSON.stringify({
@@ -111,12 +111,30 @@ const RequestPage = (props) => {
 		} catch (err) {
 			console.log('err', err);
 		}
+	};
+	const archiveHandler = async () => {
+		try {
+			const res = await fetch(`http://localhost:5000/api/requests/${id}/archive`, {
+				method: 'POST',
+				headers: { 
+					'Authorization': auth.token
+				}
+			});
+			const data = await res.json();
+			if(data.success) {
+				console.log(data);
+			}
+			return data;
+		} catch (err) {
+			console.log('err', err);
+		}
 	}
-
+	const acceptHandler = async () => {
+	}
 	return (
 		<div className={styles['request-page']}>
 			<div className={styles['book-info']}>
-				<h1>{requestData.book.title}</h1>
+				<a href={`../books/${requestData.book._id}`}><h1>{requestData.book.title}</h1></a>
 				<h2>{requestData.book.author}</h2>
 				<p>ISBN: {requestData.book.ISBN}</p>
 				<p>Genre: {requestData.book.genre}</p>
@@ -127,18 +145,19 @@ const RequestPage = (props) => {
 				<div className={styles['']}>
 					<div className={styles['actions']}>
 						<h2><Link to={`/user/${requestData.user._id}`}>{requestData.user.name}</Link> requested this book.</h2>
-						{auth.userId===requestData.user._id &&
-							<button onClick={cancelHandler}>Cancel</button>
+						{auth.userId===requestData.user._id && !requestData.archived &&
+							<button onClick={() => cancelHandler()}>Cancel</button>
 						}
-						{auth.userId===requestData.book.user &&
+						{auth.userId===requestData.book.user._id && !requestData.archived &&
 							<div>
-								<button type='submit'>Archive</button>
-								<button type='submit'>Accept</button>
+								<button onClick={() => archiveHandler()}>Archive</button>
+								<button onClick={() => acceptHandler()}>Accept</button>
 							</div>
 						}
 					</div>
 					<p>request status: {requestData.status}</p>
-					{requestData.status === 'open' && 
+					{requestData.archived && <p>Archived</p>}
+					{requestData.status === 'open' &&  !requestData.archived &&
 					<form onSubmit={(e) => submitHandler(e)} className={styles['reply-form']}>
 						<Input id='message'
 						type='text'

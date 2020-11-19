@@ -8,7 +8,7 @@ const Book = (props) => {
 		<div className={styles['book-card']} onClick={props.onClick}>
 			<img src={props.photo}></img>
 			<h4>by {bookData.author}</h4>
-			{/*<h2>{bookData.title}</h2>			*/}
+			<h2>{bookData.title}</h2>			
 		</div>
 	)
 }

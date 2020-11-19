@@ -26,10 +26,9 @@ const BookPage = (props) => {
 	};
 	const [request, setRequest] = useState(initialRequest);
 	const [bookInfo, setBookInfo] = useState(initialBookInfo);
-	console.log('auth.userId', auth.userId);
-	console.log('bookInfo.user', bookInfo.user);
+
 	const { id  } = useParams();
-	
+	console.log('bookInfo', bookInfo)
 
 	const getBookInfo = async (id) => {
 		const res = await fetch(`http://localhost:5000/api/books/${id}`, {
@@ -79,6 +78,7 @@ const BookPage = (props) => {
 			const res = await fetch(`http://localhost:5000/api/requests/add`, {
 				method: 'POST',
 				headers: {
+					'Content-Type': 'application/json',
 					'Authorization': auth.token
 				},
 				body
@@ -93,6 +93,37 @@ const BookPage = (props) => {
 		}
 	}
 
+	const loanHandler = async () => {
+		const form = new FormData();
+		form.append('status', 'on loan');
+		try {
+			const res = await fetch(`http://localhost:5000/api/books/${id}`, {
+				method: 'PUT',
+				headers: { 
+					'Authorization': auth.token
+				},
+				body: form
+			});
+		} catch (err) {
+			console.log('err', err);
+		}
+	}
+	const availableHandler = async () => {
+		const form = new FormData();
+		form.append('status', 'available');
+		try {
+			const res = await fetch(`http://localhost:5000/api/books/${id}`, {
+				method: 'PUT',
+				headers: { 
+					'Authorization': auth.token
+				},
+				body: form
+			});
+		} catch (err) {
+			console.log('err', err);
+		}
+	}
+
 	return (
 		<>
 			<div className={styles['book-page']}>
@@ -102,28 +133,48 @@ const BookPage = (props) => {
 					<h2>{bookInfo.author}</h2>
 					<p>ISBN: {bookInfo.ISBN}</p>
 					<p>Genre: {bookInfo.genre}</p>
+					<p>Status: {bookInfo.status}</p>
 					<Link to={`/user/${bookInfo.user._id}`}>Owner</Link>
 					{auth.userId === bookInfo.user._id && <div className={styles['owner-actions']}>
 						<button onClick={() => deleteHandler()}>Delete book</button>
-						<Link to={`/book/add/${id}`}>Update book</Link>
+						<button><Link to={`/book/add/${id}`}>Update book</Link></button>
+						{bookInfo.status!=='on loan' &&
+							<button onClick={() => loanHandler()}>Mark as 'on loan'</button>
+						}
+						{bookInfo.status!=='available' && 
+							<button onClick={() => availableHandler()}>Mark as 'available'</button>
+						}
 					</div>}
 				</div>
 			</div>
-			<div className={styles['actions']}>
-				{bookInfo.status==='available' &&
-				<form className={styles['add-request-form']} onSubmit={(e) => submitHandler(e)}>
-					<Input id='message'
-						type='text'
-						label='Message'
-						required='true'
-						value={request.message}
-						onChangeHandler={(e) => {
-						setRequest({ ...request, message: e.target.value })
-					}}/>
-					<button type='submit'>Request book</button>
-				</form>
-				}
+			{auth.userId===bookInfo.user._id &&
+			<div>
+				<div className={styles['actions']}>
+					{bookInfo.status==='available' &&
+					<form className={styles['add-request-form']} onSubmit={(e) => submitHandler(e)}>
+						<Input id='message'
+							type='text'
+							label='Message'
+							required={true}
+							value={request.message}
+							onChangeHandler={(e) => {
+							setRequest({ ...request, message: e.target.value })
+						}}/>
+						<button type='submit'>Request book</button>
+					</form>
+					}
+				</div>
+				<div className={styles['requests']}>
+					{bookInfo.requests.map(request => {
+						return (
+							<div key={request._id}>
+								<Link to={`../request/${request._id}`}>{`${request.status} -requested by ${request.user.name} ${request.archived ? '(archived)': '' }`}</Link>
+							</div>
+						)
+					})}
+				</div>
 			</div>
+			}
 		</>
 	)
 }
