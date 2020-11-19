@@ -1,0 +1,65 @@
+@import "./variables.scss";
+
+.request-page {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+.book-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.request-panel {
+  background-color: rgba(50, 50, 53, 0.1);
+  width: 50%;
+  margin: 3em;
+  padding: 2em;
+  border-radius: 1em;
+  -webkit-box-shadow: 4px 2px 10px 0px rgba(50, 50, 53, 0.64);
+  -moz-box-shadow: 4px 2px 10px 0px rgba(50, 50, 53, 0.64);
+  box-shadow: 4px 2px 10px 0px rgba(50, 50, 53, 0.64);
+}
+.reply-form {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-evenly;
+
+  input {
+    width: 70% !important;
+    @include input-basic;
+  }
+}
+
+.messages-panel {
+  display: flex;
+  flex-direction: column-reverse;
+
+  .message-bubble {
+    margin: 0.5em;
+    border-radius: 0.3em;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    background-color: rgba(0, 0, 0, 0.1);
+    .name {
+      margin: 1em;
+      &::after {
+        content: " : ";
+      }
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  button {
+    margin: 1em;
+  }
+}

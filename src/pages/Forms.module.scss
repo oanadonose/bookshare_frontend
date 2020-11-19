@@ -21,19 +21,7 @@
   }
 
   input {
-    background-color: #242f42;
-    border: none;
-    border-radius: 0.5em;
-    width: 100%;
-    height: 3em;
-    margin: 1em;
-
-    @media screen and (min-width: $tablet-bp) {
-      width: 60%;
-    }
-    @media screen and (min-width: $desktop-bp) {
-      width: 40%;
-    }
+    @include input-basic;
     &:focus {
       border: none !important;
     }

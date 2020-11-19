@@ -3,8 +3,8 @@ $desktop-bp: 1200px;
 
 $white: #e5efe9;
 $primary-color: #34435e;
-$primary-color-light: #3e5565;
-$secondary-color: #74bfb9;
+$primary-color-dark: #242f42;
+$secondary-color: #34435e;
 $secondary-color-dark: #66b7b8;
 $ternary-color: #e7b266;
 
@@ -16,4 +16,20 @@ $ternary-color: #e7b266;
 
 @mixin oswald-font {
   font-family: "Oswald", sans-serif;
+}
+
+@mixin input-basic {
+  background-color: #242f42;
+  border: none;
+  border-radius: 0.5em;
+  width: 100%;
+  height: 3em;
+  margin: 1em;
+
+  @media screen and (min-width: $tablet-bp) {
+    width: 60%;
+  }
+  @media screen and (min-width: $desktop-bp) {
+    width: 40%;
+  }
 }

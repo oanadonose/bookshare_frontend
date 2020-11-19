@@ -10,6 +10,7 @@ import RegisterPage from './pages/RegisterPage';
 import UserPage from './pages/UserPage';
 import BookPage from './pages/BookPage';
 import AddBookPage from './pages/AddBookPage';
+import RequestPage from './pages/RequestPage';
 import history from './history';
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
 						<Route path="/register" exact component={RegisterPage}></Route>
 						<Route path="/books/:id" exact children={<BookPage/>}></Route>
 						<Route path="/user/:id" exact children={<UserPage/>}></Route>
+						<Route path="/request/:id" exact children={<RequestPage/>}></Route>
 						<PrivateRoute path="/user/:id/edit" exact children={<RegisterPage/>}></PrivateRoute>
 						<PrivateRoute path="/book/add" exact component={AddBookPage}></PrivateRoute>
 						<PrivateRoute path="/book/add/:id" exact component={AddBookPage}></PrivateRoute>

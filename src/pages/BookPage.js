@@ -4,6 +4,8 @@ import styles from './BookPage.module.scss';
 import history from '../history';
 import { useAuth } from '../context/auth';
 import { placeholder } from '../helpers/bookPhotoPlaceholder';
+import Input from '../components/Input';
+
 const BookPage = (props) => {
 	const auth = useAuth();
 	const initialBookInfo = {
@@ -12,17 +14,21 @@ const BookPage = (props) => {
 		isbn: '',
 		genre: '',
 		user: '',
+		status: '',
 		requests: [],
 		photo: {
 			data: '',
 			contentType: ''
 		}
-	}
+	};
+	const initialRequest = {
+		message: ''
+	};
+	const [request, setRequest] = useState(initialRequest);
 	const [bookInfo, setBookInfo] = useState(initialBookInfo);
 	console.log('auth.userId', auth.userId);
 	console.log('bookInfo.user', bookInfo.user);
 	const { id  } = useParams();
-	console.log('id', id);
 	
 
 	const getBookInfo = async (id) => {
@@ -62,6 +68,31 @@ const BookPage = (props) => {
 		fetchData(id);
 	}, []);
 
+	const submitHandler = async (e) => {
+		e.preventDefault();
+		const body = JSON.stringify({
+			bookId: id,
+			message: request.message
+		});
+
+		try {
+			const res = await fetch(`http://localhost:5000/api/requests/add`, {
+				method: 'POST',
+				headers: {
+					'Authorization': auth.token
+				},
+				body
+			});
+			const data = await res.json();
+			if(data.success) {
+				console.log(data);
+			}
+			return data;
+		} catch (err) {
+			console.log('err', err);
+		}
+	}
+
 	return (
 		<>
 			<div className={styles['book-page']}>
@@ -72,31 +103,25 @@ const BookPage = (props) => {
 					<p>ISBN: {bookInfo.ISBN}</p>
 					<p>Genre: {bookInfo.genre}</p>
 					<Link to={`/user/${bookInfo.user._id}`}>Owner</Link>
-					{auth.userId === bookInfo.user && <div className={styles['owner-actions']}>
+					{auth.userId === bookInfo.user._id && <div className={styles['owner-actions']}>
 						<button onClick={() => deleteHandler()}>Delete book</button>
 						<Link to={`/book/add/${id}`}>Update book</Link>
 					</div>}
 				</div>
 			</div>
-			<div className={styles['requests']}>
-				<h2>Requests: </h2>
-				
-				{bookInfo.requests.map(request => {
-					const header = (
-						<div id={`request-${request._id}`} key={`request-${request._id}`} className={styles['request-bubble']}>
-							<p>{request._id}</p>
-						</div>
-					);
-					const messages = request.messages.map(message => {
-						return <p>{message.text}</p>
-					});
-					return (
-						<div>
-							{header}
-							{messages}
-						</div>
-					);
-					})
+			<div className={styles['actions']}>
+				{bookInfo.status==='available' &&
+				<form className={styles['add-request-form']} onSubmit={(e) => submitHandler(e)}>
+					<Input id='message'
+						type='text'
+						label='Message'
+						required='true'
+						value={request.message}
+						onChangeHandler={(e) => {
+						setRequest({ ...request, message: e.target.value })
+					}}/>
+					<button type='submit'>Request book</button>
+				</form>
 				}
 			</div>
 		</>

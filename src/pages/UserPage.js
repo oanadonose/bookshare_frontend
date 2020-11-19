@@ -15,8 +15,10 @@ const UserPage = () => {
 		address: ''
 	});
 	const [userBooks, setUserBooks] = useState([]);
+	console.log(userBooks, 'userBooks');
 
-	const [requests, setRequests] = useState([]);
+	const [userMadeRequests, setUserMadeRequests] = useState([]);
+	const [userReceivedRequests, setUserReceivedRequests] = useState([]);
 
 	const { id } = useParams();
 
@@ -39,6 +41,13 @@ const UserPage = () => {
 		const data = await res.json();
 		return data;
 	}
+	const fetchUserReceivedRequests = async (id) => {
+		const res = await fetch(`http://localhost:5000/api/requests/${id}/received`, {
+			headers: { 'Authorization': auth.token }
+		});
+		const data = await res.json();
+		return data;
+	}
 
 
 	const fetchUserBooks = async (userid) => {
@@ -48,9 +57,12 @@ const UserPage = () => {
 	const fetchData = async (userid) => {
 		const res = await fetchUserInfo(userid);
 		setUserInfo({name: res.name, email: res.email, address: res.address});
-		const requestsData = await fetchUserMadeRequests(userid);
-		console.log('requestsData', requestsData)
-		setRequests(requestsData);
+		const madeRequestsData = await fetchUserMadeRequests(userid);
+		console.log('made', madeRequestsData)
+		setUserMadeRequests(madeRequestsData);
+		const receivedRequestsData = await fetchUserReceivedRequests(userid);
+		console.log('received', receivedRequestsData);
+		setUserReceivedRequests(receivedRequestsData);
 	}
 
 	useEffect(() => {
@@ -83,9 +95,15 @@ const UserPage = () => {
 			{auth.userId===id && (
 				<div className={styles['requests-panel']}>
 					<h3>Requests Made</h3>
-					{requests.map(request => (
+					{userMadeRequests.map(request => (
 						<div>
-							<a href={`../books/${request.bookId}#request-${request._id}`}>by {request.userId.name}</a>
+							{/*<a href={`../request/${request._id}`}>for {request.book.title}</a>*/}
+						</div>
+					))}
+					<h3>Requests Received</h3>
+					{userReceivedRequests.map(request => (
+						<div>
+							<a href={`../request/${request._id}`}>by {request.user.name}</a>
 						</div>
 					))}
 				</div>
