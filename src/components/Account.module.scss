@@ -1,7 +1,18 @@
+@import "./variables.scss";
+
 .loggedin {
   min-width: 20%;
   display: flex;
   justify-content: space-around;
+}
+
+.logout {
+  font-size: 1.4rem;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  color: $ternary-color;
+  outline: none;
 }
 .guest {
   min-width: 20%;

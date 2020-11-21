@@ -15,9 +15,11 @@ import history from './history';
 
 const App = () => {
 
-	const [token, setToken] = useState(localStorage.getItem('token')||'');
-	const [userId, setUserId] = useState(localStorage.getItem('userid')||'');
-	console.log('userid', userId);
+	const [token, setToken] = useState('');
+	const [userId, setUserId] = useState('');
+	const [searched, setSearched] = useState([]);
+	
+
 	const updateToken = (value) => {
 		setToken(value);
 	}
@@ -25,9 +27,13 @@ const App = () => {
 		setUserId(value);
 	}
 
+	const updateSearched = (value) => {
+		setSearched(value);
+	}
+
 	return (
-		<AuthContext.Provider value={{token, updateToken, userId, updateUserId}}>
-			<Router history={history}>
+		<AuthContext.Provider value={{token, updateToken, userId, updateUserId, searched, updateSearched}}>
+			<Router history={history} forceRefresh={true}>
 				<div className="App">
 					<Header></Header>
 					<Switch>

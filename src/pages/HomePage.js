@@ -1,9 +1,12 @@
 import { React, useState, useEffect } from 'react';
 import Book from '../components/Book';
+import { useAuth } from '../context/auth';
 import styles from './HomePage.module.scss';
 import history from '../history';
 
 const HomePage = () => {
+
+	const auth = useAuth();
 	
 	const [books, setBooks] = useState([]);
 
@@ -17,13 +20,23 @@ const HomePage = () => {
 			console.log('err', err)
 		}
 	}
+	const fetchData = async () => {
+		const data = await getData();
+		setBooks(data);
+	}
 	useEffect(() => {
-		const fetchData = async () => {
-			const data = await getData();
-			setBooks(data);
-		}
 		fetchData();
 	},[]);
+
+
+	useEffect(() => {
+		if(auth.searched==='') {
+			fetchData();
+		}
+		else {
+			setBooks(auth.searched);
+		}
+	}, [auth.searched]);
 
 	const clickHandler = (item) => {
 		console.log('item', item);

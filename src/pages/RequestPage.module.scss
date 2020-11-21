@@ -60,6 +60,12 @@
   justify-content: space-between;
   align-items: baseline;
   button {
-    margin: 1em;
+    padding: 0.5em;
+    margin: 0 0.5em;
+    cursor: pointer;
+    background-color: $ternary-color;
+    border-radius: 0.5em;
+    border: none;
+    outline: none;
   }
 }
