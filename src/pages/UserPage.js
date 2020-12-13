@@ -38,6 +38,7 @@ const UserPage = () => {
 	const fetchUserInfo = async (id) => {
 		const res = await fetch(`http://localhost:5000/api/users/${id}`);
 		const data = await res.json();
+		if(!res) console.log('hello')
 		return data;
 	}
 
@@ -84,14 +85,35 @@ const UserPage = () => {
 
 	return (
 		<div className={styles['home-feed']}>
-			<div className={styles['info-panel']}>
-				<h2>Username: {userInfo.name}</h2>
-				<h2>Email: {userInfo.email}</h2>
-				{auth.userId === id && <h3>Address: {userInfo.address}</h3>}
-				<div className={styles['owner-actions']}>
-					<Link to={`/user/${id}/edit`}>Update user details</Link>
+			<div className={styles['left-side']}>
+				<div className={styles['info-panel']}>
+					<h2>Username: {userInfo.name}</h2>
+					<h2>Email: {userInfo.email}</h2>
+					{auth.userId === id && <h3>Address: {userInfo.address}</h3>}
+					<div className={styles['owner-actions']}>
+						<Link to={`/user/${id}/edit`}>Update user details</Link>
+					</div>
 				</div>
+				{auth.userId===id && (
+					<div className={styles['requests-panel']}>
+						<h3>Requests Made</h3>
+						{userMadeRequests && userMadeRequests.map(request => {
+							console.log('request', request);
+							return (
+							<div key={request._id}>
+								<a href={`../request/${request._id}`}>[{request.status}] for {request.book.title}</a>
+							</div>
+						)})}
+						<h3>Requests Received</h3>
+						{userReceivedRequests && userReceivedRequests.map(request => (
+							<div key={request._id}>
+								<a href={`../request/${request._id}`}>[{request.status}] by {request.user.name}</a>
+							</div>
+						))}
+					</div>
+				)}
 			</div>
+			
 			<div className={styles['books-panel']}>
 				{userBooks.map(item => (
 					<Book item={item}
@@ -100,24 +122,7 @@ const UserPage = () => {
 					onClick={() => clickHandler(item)}/>
 				))}
 			</div>
-			{auth.userId===id && (
-				<div className={styles['requests-panel']}>
-					<h3>Requests Made</h3>
-					{userMadeRequests.map(request => {
-						console.log('request', request);
-						return (
-						<div key={request._id}>
-							<a href={`../request/${request._id}`}>[{request.status}] for {request.book.title}</a>
-						</div>
-					)})}
-					<h3>Requests Received</h3>
-					{userReceivedRequests.map(request => (
-						<div key={request._id}>
-							<a href={`../request/${request._id}`}>[{request.status}] by {request.user.name}</a>
-						</div>
-					))}
-				</div>
-			)}
+			
 			
 		</div>
 	)

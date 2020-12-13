@@ -8,12 +8,13 @@ import Input from '../components/Input';
 
 const BookPage = (props) => {
 	const auth = useAuth();
+	console.log('auth',auth);
 	const initialBookInfo = {
 		title: '',
 		author: '',
 		isbn: '',
 		genre: '',
-		user: '',
+		user: {},
 		status: '',
 		requests: [],
 		photo: {
@@ -67,6 +68,7 @@ const BookPage = (props) => {
 		fetchData(id);
 	}, []);
 
+
 	const submitHandler = async (e) => {
 		e.preventDefault();
 		const body = JSON.stringify({
@@ -85,7 +87,7 @@ const BookPage = (props) => {
 			});
 			const data = await res.json();
 			if(data.success) {
-				console.log(data);
+				setBookInfo({...bookInfo, status: 'requested'});
 			}
 			return data;
 		} catch (err) {
@@ -104,6 +106,10 @@ const BookPage = (props) => {
 				},
 				body: form
 			});
+			if(res.ok) {
+				setBookInfo({...bookInfo, status: 'on loan'});
+			}
+			console.log('res',res);
 		} catch (err) {
 			console.log('err', err);
 		}
@@ -119,6 +125,9 @@ const BookPage = (props) => {
 				},
 				body: form
 			});
+			if(res.ok) {
+				setBookInfo({...bookInfo, status: 'available'});
+			}
 		} catch (err) {
 			console.log('err', err);
 		}
@@ -131,10 +140,10 @@ const BookPage = (props) => {
 				<div className={styles['info-panel']}>
 					<h1>{bookInfo.title}</h1>
 					<h2>{bookInfo.author}</h2>
-					<p>ISBN: {bookInfo.ISBN}</p>
-					<p>Genre: {bookInfo.genre}</p>
+					{bookInfo.ISBN && <p>ISBN: {bookInfo.ISBN}</p>}
+					{bookInfo.genre && <p>Genre: {bookInfo.genre}</p>}
 					<p>Status: {bookInfo.status}</p>
-					<Link to={`/user/${bookInfo.user._id}`}>Owner</Link>
+					<Link to={`/user/${bookInfo.user._id}`}>posted by {bookInfo.user.name}</Link>
 					{auth.userId === bookInfo.user._id && <div className={styles['owner-actions']}>
 						<button onClick={() => deleteHandler()}>Delete book</button>
 						<button><Link to={`/book/add/${id}`}>Update book</Link></button>
@@ -147,10 +156,8 @@ const BookPage = (props) => {
 					</div>}
 				</div>
 			</div>
-			{auth.userId===bookInfo.user._id &&
-			<div>
+			{bookInfo.status!=='on loan' && auth.userId!==bookInfo.user._id && 
 				<div className={styles['actions']}>
-					{bookInfo.status==='available' &&
 					<form className={styles['add-request-form']} onSubmit={(e) => submitHandler(e)}>
 						<Input id='message'
 							type='text'
@@ -162,10 +169,12 @@ const BookPage = (props) => {
 						}}/>
 						<button type='submit'>Request book</button>
 					</form>
-					}
 				</div>
+			}
+			{auth.userId===bookInfo.user._id &&
+			<div>
 				<div className={styles['requests']}>
-					{bookInfo.requests.map(request => {
+					{bookInfo.requests && bookInfo.requests.map(request => {
 						return (
 							<div key={request._id}>
 								<Link to={`../request/${request._id}`}>{`${request.status} -requested by ${request.user.name} ${request.archived ? '(archived)': '' }`}</Link>

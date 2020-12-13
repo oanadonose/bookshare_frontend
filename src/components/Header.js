@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import history from '../history.js';
 import Account from './Account.js';
@@ -23,6 +23,16 @@ const Header = (props) => {
 			console.log('err', err);
 		}
 	}
+
+	//for persistent context for auth - local storage keeps data on refresh but context doesn't
+	useEffect(() => {
+		if(!auth.token && localStorage.token) {
+			auth.updateToken(localStorage.token);
+		}
+		if(!auth.userId && localStorage.userid) {
+			auth.updateUserId(localStorage.userid);
+		}
+	}, [auth.token]);
 
 	const homeClickHandler = () => {
 		auth.updateSearched('');

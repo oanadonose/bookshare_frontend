@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react';
 import Book from '../components/Book';
-import { useAuth } from '../context/auth';
+import { useAuth } from '../context/auth.js';
 import styles from './HomePage.module.scss';
 import history from '../history';
 
@@ -47,7 +47,7 @@ const HomePage = () => {
 
 	return (
 		<div className={styles['home-feed']}>
-			{books.map(item => (
+			{books && books.map(item => (
 				<Book item={item}
 				key={item._id}
 				photo={`data:${item.photo.contentType};base64,${item.photo.data}`} 
