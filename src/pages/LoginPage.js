@@ -29,8 +29,18 @@ const LoginPage = () => {
 				auth.updateToken(data.token);
 				localStorage.setItem('userid', data.userid);
 				auth.updateUserId(data.userid);
+				history.push('/');
 			}
-			history.push('/');
+			else {
+				//replace with custom error component??
+				//invalid email
+				if(res.status===404) {
+					setCreds({ email: 'user not found', password: creds.password })
+				}
+				//invalid password
+				if(res.status===401) {
+				}
+			}
 			return data
 		} catch(err) {
 			console.log('err', err);
