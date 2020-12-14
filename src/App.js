@@ -11,7 +11,7 @@ import UserPage from './pages/UserPage';
 import BookPage from './pages/BookPage';
 import AddBookPage from './pages/AddBookPage';
 import RequestPage from './pages/RequestPage';
-import AdminPage from './pages/RequestPage';
+import AdminPage from './pages/AdminPage';
 import history from './history';
 
 const App = () => {
@@ -44,7 +44,7 @@ const App = () => {
 						<Route path="/books/:id" exact children={<BookPage/>}></Route>
 						<Route path="/user/:id" exact children={<UserPage/>}></Route>
 						<Route path="/request/:id" exact children={<RequestPage/>}></Route>
-						<Route path="/users" exact children={<AdminPage/>}></Route>
+						<PrivateRoute path="/test" exact component={AdminPage}></PrivateRoute>
 						<PrivateRoute path="/user/:id/edit" exact children={<RegisterPage/>}></PrivateRoute>
 						<PrivateRoute path="/book/add" exact component={AddBookPage}></PrivateRoute>
 						<PrivateRoute path="/book/add/:id" exact component={AddBookPage}></PrivateRoute>

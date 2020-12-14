@@ -1,7 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/auth';
-import LoginPage from '../pages/LoginPage';
 import styles from './Account.module.scss';
 
 const Account = (props) => {
