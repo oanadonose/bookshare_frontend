@@ -26,6 +26,15 @@ const BookPage = (props) => {
 		message: ''
 	};
 	const [request, setRequest] = useState(initialRequest);
+	const [requestedByUser, setRequestedByUser] = useState({
+		_id: '',
+		name: '',
+		status: '',
+		user: {
+			_id: '',
+			name: ''
+		}
+	});
 	const [bookInfo, setBookInfo] = useState(initialBookInfo);
 
 	const { id  } = useParams();
@@ -44,6 +53,18 @@ const BookPage = (props) => {
 		}		
 	}
 
+	const getRequestInfo = async (id) => {
+		const res = await fetch(`http://localhost:5000/api/requests/${id}/book`, {
+			headers: {
+				"Authorization": auth.token
+			},
+		});
+		console.log('request res', res);
+		if(res.ok) {
+			const requestData = await res.json();
+			return requestData;
+		}
+	}
 	const deleteHandler = async () => {
 		console.log('delete ');
 		const res = await fetch(`http://localhost:5000/api/books/${id}`, {
@@ -62,11 +83,23 @@ const BookPage = (props) => {
 
 	useEffect(() => {
 		const fetchData = async (id) => {
-			const data = await getBookInfo(id);
+			const book = await getBookInfo(id);
+			const requests = await getRequestInfo(id);
+			const data = {...book, requests};
+			if(requests.length){
+				console.log('requests.length',requests.length)
+				const found = requests.find(request => request.user._id===auth.userId)
+				console.log('requestedByUser', requestedByUser);
+				if(found) {
+					console.log('found',found)
+					setRequestedByUser(found);
+				}
+				console.log('requestedByUser', requestedByUser);
+			}
 			setBookInfo(data);
 		}
 		fetchData(id);
-	}, []);
+	}, [auth.token, bookInfo.status]);
 
 
 	const submitHandler = async (e) => {
@@ -86,9 +119,7 @@ const BookPage = (props) => {
 				body
 			});
 			const data = await res.json();
-			if(data.success) {
-				setBookInfo({...bookInfo, status: 'requested'});
-			}
+			setBookInfo(prev => ({...prev, status: 'requested'}));
 			return data;
 		} catch (err) {
 			console.log('err', err);
@@ -156,7 +187,7 @@ const BookPage = (props) => {
 					</div>}
 				</div>
 			</div>
-			{bookInfo.status!=='on loan' && auth.userId!==bookInfo.user._id && 
+			{auth.userId && bookInfo.status!=='on loan' && auth.userId!==bookInfo.user._id && !requestedByUser._id  &&
 				<div className={styles['actions']}>
 					<form className={styles['add-request-form']} onSubmit={(e) => submitHandler(e)}>
 						<Input id='message'
@@ -169,6 +200,11 @@ const BookPage = (props) => {
 						}}/>
 						<button type='submit'>Request book</button>
 					</form>
+				</div>
+			}
+			{requestedByUser._id && 
+				<div>
+					<Link to={`../request/${requestedByUser._id}`}>{`${requestedByUser.status} -requested by ${requestedByUser.user.name} ${requestedByUser.archived ? '(archived)': '' }`}</Link>
 				</div>
 			}
 			{auth.userId===bookInfo.user._id &&

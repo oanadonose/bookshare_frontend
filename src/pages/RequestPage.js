@@ -7,12 +7,12 @@ import { placeholder } from '../helpers/bookPhotoPlaceholder';
 
 const RequestPage = (props) => {
 	const auth = useAuth();
-	console.log('auth.userId', auth.userId);
 	
 	const { id  } = useParams();
-	console.log('id', id);
+
 	const initialRequestData = {
 		_id: '',
+		status: '',
 		messages: [],
 		archived: false,
 		book: {
@@ -31,29 +31,30 @@ const RequestPage = (props) => {
 			}
 		},
 		user: {},
-		status: ''
 	};
+	const [requestData, setRequestData] = useState(initialRequestData);
 	const initialRequest = {
 		message: '',
 		status: ''
 	}
-
-	const [requestData, setRequestData] = useState(initialRequestData);
 	const [request, setRequest] = useState(initialRequest);
+
 	const [didAction, setDidAction] = useState(false);
 	console.log(didAction);
 	
 
 	const fetchRequest = async (requestId) => {
-		const res = await fetch(`http://localhost:5000/api/requests/${requestId}`, {
-			headers: { 
-				'Authorization': auth.token
+		if(auth.token) {
+			const res = await fetch(`http://localhost:5000/api/requests/${requestId}`, {
+				headers: { 
+					'Authorization': auth.token
+				}
+			});
+			if(res.ok) {
+				const data= await res.json();
+				console.log('data', data);
+				return data;
 			}
-		});
-		if(res.ok) {
-			const data= await res.json();
-			console.log('data', data);
-			return data;
 		}
 	}
 
@@ -85,10 +86,13 @@ const RequestPage = (props) => {
 	useEffect(() => {
 		const fetchData = async (requestId) => {
 			const data = await fetchRequest(requestId);
+			if(data) {
+			console.log('data',data)
 			setRequestData(data);
+			}
 		}
 		fetchData(id);
-	}, []);
+	}, [auth.token, requestData.status]);
 
 	const cancelHandler = async () => {
 		const body= JSON.stringify({
@@ -104,9 +108,7 @@ const RequestPage = (props) => {
 				body
 			});
 			const data = await res.json();
-			if(data.success) {
-				console.log(data);
-			}
+			setRequestData(prev => ({...prev, status: 'closed'}));
 			return data;
 		} catch (err) {
 			console.log('err', err);
@@ -117,13 +119,14 @@ const RequestPage = (props) => {
 			const res = await fetch(`http://localhost:5000/api/requests/${id}/archive`, {
 				method: 'POST',
 				headers: { 
-					'Authorization': auth.token
+					'Authorization': localStorage.token
 				}
 			});
 			const data = await res.json();
 			if(data.success) {
 				console.log(data);
 			}
+			setRequestData(prev => ({...prev, status: 'archived'}));
 			return data;
 		} catch (err) {
 			console.log('err', err);
@@ -132,7 +135,8 @@ const RequestPage = (props) => {
 	const acceptHandler = async () => {
 	}
 	return (
-		<div className={styles['request-page']}>
+		requestData ? 
+		(<div className={styles['request-page']}>
 			<div className={styles['book-info']}>
 				<a href={`../books/${requestData.book._id}`}><h1>{requestData.book.title}</h1></a>
 				<h2>{requestData.book.author}</h2>
@@ -145,15 +149,17 @@ const RequestPage = (props) => {
 				<div className={styles['']}>
 					<div className={styles['actions']}>
 						<h2><Link to={`/user/${requestData.user._id}`}>{requestData.user.name}</Link> requested this book.</h2>
-						{auth.userId===requestData.user._id && !requestData.archived &&
+						{auth.userId===requestData.user._id && !requestData.archived && requestData.status!=='closed' &&
 							<button onClick={() => cancelHandler()}>Cancel</button>
 						}
+						<div>
 						{auth.userId===requestData.book.user._id && !requestData.archived &&
-							<div>
-								<button onClick={() => archiveHandler()}>Archive</button>
-								<button onClick={() => acceptHandler()}>Accept</button>
-							</div>
+								<button onClick={() => archiveHandler()}>Archive</button>			
 						}
+						{auth.userId===requestData.book.user._id && 
+							<button onClick={() => acceptHandler()}>Accept</button>
+						}		
+						</div>
 					</div>
 					<p>request status: {requestData.status}</p>
 					{requestData.archived && <p>Archived</p>}
@@ -175,7 +181,7 @@ const RequestPage = (props) => {
 				<div className={styles['messages-panel']}>
 					{requestData.messages.map((message) => {
 						return (
-							<div className={styles['message-bubble']}>
+							<div key={message._id} className={styles['message-bubble']}>
 								<h4 className={styles['name']}>{message.user.name}</h4>
 								<p>{message.text}</p>
 							</div>
@@ -183,7 +189,7 @@ const RequestPage = (props) => {
 					})}
 				</div>
 			</div>
-		</div>
+		</div>) : (<div>Loading</div>)
 	);
 }
 

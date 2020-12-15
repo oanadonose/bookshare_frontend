@@ -15,15 +15,7 @@ const UserPage = () => {
 		address: ''
 	});
 	const [userBooks, setUserBooks] = useState([]);
-	console.log(userBooks, 'userBooks');
-	const initialRequestData = {
-		archived: false,
-		messages: [],
-		status: '',
-		user: '',
-		_id: '',
-		book: {}
-	}
+
 	const [userMadeRequests, setUserMadeRequests] = useState([]);
 	const [userReceivedRequests, setUserReceivedRequests] = useState([]);
 
@@ -36,9 +28,12 @@ const UserPage = () => {
 		return data;
 	}
 	const fetchUserInfo = async (id) => {
-		const res = await fetch(`http://localhost:5000/api/users/${id}`);
+		const res = await fetch(`http://localhost:5000/api/users/${id}`, {
+			headers: { 
+				'Authorization': auth.token
+			}
+		});
 		const data = await res.json();
-		if(!res) console.log('hello')
 		return data;
 	}
 
@@ -47,7 +42,6 @@ const UserPage = () => {
 			headers: { 'Authorization': auth.token }
 		});
 		const data = await res.json();
-		console.log('data', data);
 		return data;
 	}
 	const fetchUserReceivedRequests = async (id) => {
@@ -67,17 +61,15 @@ const UserPage = () => {
 		const res = await fetchUserInfo(userid);
 		setUserInfo({name: res.name, email: res.email, address: res.address});
 		const madeRequestsData = await fetchUserMadeRequests(userid);
-		console.log('made', madeRequestsData)
 		setUserMadeRequests(madeRequestsData);
 		const receivedRequestsData = await fetchUserReceivedRequests(userid);
-		console.log('received', receivedRequestsData);
 		setUserReceivedRequests(receivedRequestsData);
 	}
 
 	useEffect(() => {
 		fetchData(id);	
 		fetchUserBooks(id);
-	}, []);
+	}, [auth.token]);
 
 	const clickHandler = (item) => {
 		history.push(`/books/${item._id}`);
