@@ -142,7 +142,7 @@ const RequestPage = (props) => {
 				<h2>{requestData.book.author}</h2>
 				<p>ISBN: {requestData.book.ISBN}</p>
 				<p>Genre: {requestData.book.genre}</p>
-				<Link to={`/user/${requestData.book.user}`}>Owner</Link>
+				<Link to={`/user/${requestData.book.user._id}`}>posted by {requestData.book.user.name}</Link>
 				<img alt='book-cover' src={`data:${requestData.book.photo.contentType ? requestData.book.photo.contentType : 'image/png'};base64,${requestData.book.photo.data ? requestData.book.photo.data : placeholder}`}/>
 			</div>
 			<div className={styles['request-panel']}>
@@ -156,7 +156,7 @@ const RequestPage = (props) => {
 						{auth.userId===requestData.book.user._id && !requestData.archived &&
 								<button onClick={() => archiveHandler()}>Archive</button>			
 						}
-						{auth.userId===requestData.book.user._id && 
+						{auth.userId===requestData.book.user._id && !requestData.archived && requestData.status!=='closed'&&
 							<button onClick={() => acceptHandler()}>Accept</button>
 						}		
 						</div>

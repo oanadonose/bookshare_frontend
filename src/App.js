@@ -33,6 +33,9 @@ const App = () => {
 	}
 
 	return (
+		//todo: try move authcontext only to wrap what is needed cuz of performance drain 
+		// #Global shared state with context @ https://blog.logrocket.com/a-deep-dive-into-react-context-api/
+
 		<AuthContext.Provider value={{token, updateToken, userId, updateUserId, searched, updateSearched}}>
 			<Router history={history} forceRefresh={true}>
 				<div className="App">

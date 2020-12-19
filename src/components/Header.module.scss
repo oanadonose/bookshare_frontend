@@ -8,6 +8,12 @@
   padding: 1em;
   background-color: #1d2534;
   font-size: 1.4rem;
+  box-shadow: 3px 2px 12px 1px rgba(240, 209, 97, 0.59);
+  -webkit-box-shadow: 3px 2px 12px 1px rgba(240, 209, 97, 0.59);
+  -moz-box-shadow: 3px 2px 12px 1px rgba(240, 209, 97, 0.59);
+  a:hover {
+    color: #a05b0ced;
+  }
 }
 .home-btn {
   font-size: 1.4rem;
@@ -47,7 +53,13 @@
     padding: 0.8em;
     border: none;
     -webkit-box-shadow: -12px 1px 3px -7px rgba(231, 178, 102, 0.93);
-    box-shadow: -12px 1px 3px -7px rgba(231, 178, 102, 0.93);
+    box-shadow: -12px 1px 3px -7px #e7b266ed;
+
+    &:hover {
+      color: #a05b0ced;
+      box-shadow: -12px 1px 3px -7px #a05b0ced;
+      -webkit-box-shadow: -12px 1px 3px -7px #a05b0ced;
+    }
   }
 }
 
