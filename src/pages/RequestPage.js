@@ -5,7 +5,7 @@ import { useAuth } from '../context/auth';
 import Input from '../components/Input';
 import { placeholder } from '../helpers/bookPhotoPlaceholder';
 
-const RequestPage = (props) => {
+const RequestPage = () => {
 	const auth = useAuth();
 	
 	const { id  } = useParams();

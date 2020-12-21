@@ -1,4 +1,5 @@
 import { React } from 'react';
+import PropTypes from 'prop-types';
 
 const Input = (props) => {
  const label = (<label htmlFor={props.id}>{props.label}</label>);
@@ -39,6 +40,15 @@ const Input = (props) => {
 				</>
 			)
 	}
+}
+
+Input.propTypes = {
+	id: PropTypes.string,
+	label: PropTypes.string,
+	type: PropTypes.string,
+	required: PropTypes.bool,
+	onChangeHandler: PropTypes.func,
+	value: PropTypes.string
 }
 
 export default Input;

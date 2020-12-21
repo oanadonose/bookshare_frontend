@@ -6,7 +6,7 @@ import { useAuth } from '../context/auth';
 import { placeholder } from '../helpers/bookPhotoPlaceholder';
 import Input from '../components/Input';
 
-const BookPage = (props) => {
+const BookPage = () => {
 	const auth = useAuth();
 	console.log('auth',auth);
 	const initialBookInfo = {

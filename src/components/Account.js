@@ -2,11 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/auth';
 import styles from './Account.module.scss';
+import PropTypes from 'prop-types';
 
 const Account = (props) => {
 	
 	const auth = useAuth();
-	console.log('props.isLoggedIn', props.isLoggedIn)
 
 	const clickHandler = async () => {
 		const res = await fetch('http://localhost:5000/api/users/logout', { 
@@ -18,8 +18,7 @@ const Account = (props) => {
 		localStorage.removeItem('token');
 		localStorage.removeItem('userid');
 		auth.updateToken('');
-		auth.updateUserId('');
-		console.log('res', res);		
+		auth.updateUserId('');	
 	}
 	if(props.isLoggedIn) {
 		return (
@@ -38,5 +37,9 @@ const Account = (props) => {
 			</div>
 		)
 	}
+}
+
+Account.propTypes = {
+	isLoggedIn: PropTypes.string
 }
 export default Account;

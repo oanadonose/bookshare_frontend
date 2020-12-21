@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Redirect } from 'react-router-dom';
 import history from '../history.js';
 import Account from './Account.js';
 import Input from './Input.js';
 import styles from './Header.module.scss';
 import { AuthContext, useAuth } from '../context/auth';
 
-const Header = (props) => {
+const Header = () => {
 	const auth = useAuth();
-	console.log('auth.token', auth);
 
 	const [searchQ, setSearchQ] = useState('');
 
@@ -18,7 +16,6 @@ const Header = (props) => {
 			const res = await fetch(`http://localhost:5000/api/books/?search=${searchQ}`)
 			const data = await res.json();
 			auth.updateSearched(data);
-			console.log('data', data);
 		} catch (err) {
 			console.log('err', err);
 		}
@@ -32,7 +29,7 @@ const Header = (props) => {
 		if(!auth.userId && localStorage.userid) {
 			auth.updateUserId(localStorage.userid);
 		}
-	}, [auth.token]);
+	}, [auth, auth.token]);
 
 	const homeClickHandler = () => {
 		auth.updateSearched('');

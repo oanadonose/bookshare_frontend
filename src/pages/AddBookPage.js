@@ -6,7 +6,7 @@ import history from '../history';
 import { useAuth } from '../context/auth';
 import bookGenres from '../helpers/bookGenres';
 
-const AddBookPage = (props) => {
+const AddBookPage = () => {
 
 	const auth = useAuth();
 	const [form, setForm] = useState(new FormData());
@@ -20,10 +20,7 @@ const AddBookPage = (props) => {
 	}
 
 	const [bookInfo, setBookInfo] = useState(initialBookInfo);
-	console.log('auth.userId', auth.userId);
-	console.log('bookInfo', bookInfo);
 	const { id  } = useParams();
-	console.log('id', id);
 
 	useEffect(() => {
 		if(id) {
