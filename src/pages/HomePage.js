@@ -1,31 +1,39 @@
 import { React, useState, useEffect } from 'react';
+import { useHistory } from "react-router-dom";
 import Book from '../components/Book';
 import { useAuth } from '../context/auth.js';
 import styles from './HomePage.module.scss';
-import history from '../history';
+//import history from '../history';
 
 const HomePage = () => {
-
+	let history = useHistory();
 	const auth = useAuth();
-	
+	const apiUrl = 'http://localhost:5000/api';
 	const [books, setBooks] = useState([]);
-
+//'http://localhost:5000/api/books'
 	console.log('books', books);
-	const getData = async () => {
-		try {
-			const res = await fetch('http://localhost:5000/api/books');
-			const data = await res.json();
-			return data
-		} catch(err) {
-			console.log('err', err)
-		}
-	}
+	
 	const fetchData = async () => {
+		const getData = async () => {
+			try {
+				const res = await fetch(`${apiUrl}/books`);
+				if(res.ok) {
+					const data = await res.json();
+					return data;
+				}
+				else {
+					throw new Error(res.status)
+				}	
+			} catch(err) {
+				history.push({pathname: '/error', state:err.message});
+			}
+		}
 		const data = await getData();
 		setBooks(data);
 	}
 	useEffect(() => {
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	},[]);
 
 
@@ -36,6 +44,7 @@ const HomePage = () => {
 		else {
 			setBooks(auth.searched);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auth.searched]);
 
 	const clickHandler = (item) => {

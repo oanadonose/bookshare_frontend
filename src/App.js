@@ -12,6 +12,7 @@ import BookPage from './pages/BookPage';
 import AddBookPage from './pages/AddBookPage';
 import RequestPage from './pages/RequestPage';
 import AdminPage from './pages/AdminPage';
+import ErrorPage from './pages/ErrorPage';
 import history from './history';
 
 const App = () => {
@@ -42,6 +43,7 @@ const App = () => {
 					<Header></Header>
 					<Switch>
 						<Route path="/" exact component={HomePage}></Route>
+						<Route path="/error" exact component={ErrorPage}></Route>
 						<Route path="/login" exact component={LoginPage}></Route>
 						<Route path="/register" exact component={RegisterPage}></Route>
 						<Route path="/books/:id" exact children={<BookPage/>}></Route>
