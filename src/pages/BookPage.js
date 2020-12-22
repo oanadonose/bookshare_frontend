@@ -168,7 +168,7 @@ const BookPage = () => {
 		<>
 			<div className={styles['book-page']}>
 				<img alt='book-cover' src={`data:${bookInfo.photo.contentType ? bookInfo.photo.contentType : 'image/png'};base64,${bookInfo.photo.data ? bookInfo.photo.data : placeholder}`}/>
-				<div className={styles['info-panel']}>
+				<div className={styles['info-pane  l']}>
 					<h1>{bookInfo.title}</h1>
 					<h2>{bookInfo.author}</h2>
 					{bookInfo.ISBN && <p>ISBN: {bookInfo.ISBN}</p>}
@@ -179,10 +179,10 @@ const BookPage = () => {
 						<button onClick={() => deleteHandler()}>Delete book</button>
 						<button><Link to={`/book/add/${id}`}>Update book</Link></button>
 						{bookInfo.status!=='on loan' &&
-							<button onClick={() => loanHandler()}>Mark as 'on loan'</button>
+							<button onClick={() => loanHandler()}>Mark 'on loan'</button>
 						}
 						{bookInfo.status!=='available' && 
-							<button onClick={() => availableHandler()}>Mark as 'available'</button>
+							<button onClick={() => availableHandler()}>Mark 'available'</button>
 						}
 					</div>}
 				</div>
@@ -202,24 +202,26 @@ const BookPage = () => {
 					</form>
 				</div>
 			}
-			{requestedByUser._id && 
-				<div>
-					<Link to={`../request/${requestedByUser._id}`}>{`${requestedByUser.status} -requested by ${requestedByUser.user.name} ${requestedByUser.archived ? '(archived)': '' }`}</Link>
-				</div>
-			}
-			{auth.userId===bookInfo.user._id &&
-			<div>
-				<div className={styles['requests']}>
-					{bookInfo.requests && bookInfo.requests.map(request => {
-						return (
-							<div key={request._id}>
-								<Link to={`../request/${request._id}`}>{`${request.status} -requested by ${request.user.name} ${request.archived ? '(archived)': '' }`}</Link>
-							</div>
-						)
-					})}
-				</div>
+			<div className={styles['requests']}>
+				<h4>Requests: </h4>
+				{requestedByUser._id && 
+					<div>
+						<Link to={`../request/${requestedByUser._id}`}>{`${requestedByUser.status} -requested by ${requestedByUser.user.name} ${requestedByUser.archived ? '(archived)': '' }`}</Link>
+					</div>
+				}
+				{auth.userId===bookInfo.user._id &&
+					<div>
+						{bookInfo.requests && bookInfo.requests.map(request => {
+							return (
+								<div key={request._id}>
+									<Link to={`../request/${request._id}`}>{`${request.status} -requested by ${request.user.name} ${request.archived ? '(archived)': '' }`}</Link>
+								</div>
+							)
+						})}
+					</div>
+				}
 			</div>
-			}
+			
 		</>
 	)
 }
