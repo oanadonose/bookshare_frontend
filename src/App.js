@@ -1,8 +1,7 @@
 import {React, useState} from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
-import { AuthContext, useAuth } from './context/auth';
-import './App.scss';
+import { AuthContext } from './context/auth';
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';

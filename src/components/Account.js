@@ -22,7 +22,7 @@ const Account = (props) => {
 	}
 	if(props.isLoggedIn) {
 		return (
-			<div className={styles['loggedin']}>	
+			<div className={`${styles['loggedin']} ${props.showNav ? 'loggedin--show': ''}`}>	
 				<Link to='/book/add'>Add book</Link>
 				<Link to={`/user/${auth.userId}`}>My profile</Link>
 				<button className={styles['logout']} onClick={clickHandler}>Logout</button>

@@ -9,6 +9,7 @@ const Header = () => {
 	const auth = useAuth();
 
 	const [searchQ, setSearchQ] = useState('');
+	const [showNav, setShowNav] = useState(window.innerWidth>800 ? true:false);
 
 	const submitHandler = async (e) => {
 		e.preventDefault();
@@ -40,20 +41,24 @@ const Header = () => {
 	return (
 		<div className={styles['header']}>
 			<button type="button" className={styles['home-btn']} onClick={homeClickHandler}>Home</button>
-			<div className={styles['search']}>
-				<Input type='text' className={styles['search-input']}
-					name='search' 
-					placeholder='Search . . . . . '
-					value={searchQ}
-					onChangeHandler={(e) => {
-						setSearchQ(e.target.value)
-					}} 
-					></Input>
-				<button type='button' onClick={submitHandler} className={styles["search-btn"]}>Search</button>
+			<button type="button" className={styles['navbar-btn']} 
+				onClick={() => setShowNav(!showNav)}>{showNav ? 'Close':'Menu'}</button>
+			<div className={`${styles['navbar']} ${showNav ? '':styles['navbar--hide']}`}>
+				<div className={styles['search']}>
+					<Input type='text' className={styles['search-input']}
+						name='search' 
+						placeholder='Search . . . . . '
+						value={searchQ}
+						onChangeHandler={(e) => {
+							setSearchQ(e.target.value)
+						}} 
+						></Input>
+					<button type='button' onClick={submitHandler} className={styles["search-btn"]}>Search</button>
+				</div>
+				<AuthContext.Consumer>
+					{value => <Account showToggle={showNav} isLoggedIn={auth.token}/>}
+				</AuthContext.Consumer>
 			</div>
-			<AuthContext.Consumer>
-				{value => <Account className={styles['account-bar']} isLoggedIn={auth.token}/>}
-			</AuthContext.Consumer>
 		</div>
 	)
 }

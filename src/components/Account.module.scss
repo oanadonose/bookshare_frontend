@@ -3,7 +3,18 @@
 .loggedin {
   min-width: 25%;
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.4em 0 0 0;
+
+  @media screen and (min-width: 1000px) {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+}
+
+.loggedin--show {
+  display: none;
 }
 
 .logout {

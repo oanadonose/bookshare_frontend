@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Book.module.scss';
+import PropTypes from 'prop-types';
 
 const Book = (props) => {
 	const bookData = props.item;
@@ -11,4 +12,11 @@ const Book = (props) => {
 		</div>
 	)
 }
+
+Book.propTypes = {
+	item: PropTypes.object,
+	photo: PropTypes.string,
+	onClick: PropTypes.func
+}
+
 export default Book;

@@ -3,18 +3,50 @@
 .header {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  padding: 1em;
+  padding: 0.4em;
   background-color: #1d2534;
   font-size: 1.4rem;
   box-shadow: 3px 2px 12px 1px rgba(240, 209, 97, 0.59);
   -webkit-box-shadow: 3px 2px 12px 1px rgba(240, 209, 97, 0.59);
   -moz-box-shadow: 3px 2px 12px 1px rgba(240, 209, 97, 0.59);
+  @media screen and (min-width: 1000px) {
+    flex-direction: row;
+  }
   a:hover {
     color: #a05b0ced;
   }
 }
+@media screen and (min-width: 1000px) {
+  .navbar-btn {
+    display: none;
+  }
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    max-width: 80%;
+  }
+}
+
+.navbar-btn {
+  background-color: transparent;
+  color: $white;
+  border-color: $white;
+  border-radius: 0.2em;
+}
+
+.navbar {
+  width: -webkit-fill-available;
+  margin: 1em 0.5em 0.5em 0em;
+}
+
+.navbar--hide {
+  display: none;
+}
+
 .home-btn {
   font-size: 1.4rem;
   cursor: pointer;
@@ -25,11 +57,15 @@
 }
 
 .search {
-  width: 40%;
+  height: 2em;
   display: flex;
   align-items: center;
   background-color: #242f42;
   border-radius: 0.5em;
+
+  @media screen and (min-width: 1000px) {
+    width: 50%;
+  }
 
   input {
     background-color: #242f42;
@@ -46,11 +82,12 @@
     }
   }
   button {
+    height: 2em;
+    padding: 0 0.5em;
     cursor: pointer;
     margin: 0 0.3em;
     background-color: #242f42;
     color: $ternary-color;
-    padding: 0.8em;
     border: none;
     -webkit-box-shadow: -12px 1px 3px -7px rgba(231, 178, 102, 0.93);
     box-shadow: -12px 1px 3px -7px #e7b266ed;
