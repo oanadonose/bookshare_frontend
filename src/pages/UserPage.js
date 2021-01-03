@@ -23,14 +23,16 @@ const UserPage = () => {
 
 	
 	const fetchBooks = async (userid) => {
-		const res = await fetch(`http://localhost:5000/api/users/${userid}/books`);
+		const res = await fetch(`http://localhost:5000/api/users/${userid}/books`, {
+			headers: {'Authorization': auth.token || localStorage.token }
+		});
 		const data = await res.json();
 		return data;
 	}
 	const fetchUserInfo = async (id) => {
 		const res = await fetch(`http://localhost:5000/api/users/${id}`, {
 			headers: { 
-				'Authorization': auth.token
+				'Authorization': auth.token || localStorage.token
 			}
 		});
 		const data = await res.json();
@@ -39,14 +41,14 @@ const UserPage = () => {
 
 	const fetchUserMadeRequests = async (id) => {
 		const res = await fetch(`http://localhost:5000/api/requests/${id}/made`, {
-			headers: { 'Authorization': auth.token }
+			headers: { 'Authorization': auth.token || localStorage.token }
 		});
 		const data = await res.json();
 		return data;
 	}
 	const fetchUserReceivedRequests = async (id) => {
 		const res = await fetch(`http://localhost:5000/api/requests/${id}/received`, {
-			headers: { 'Authorization': auth.token }
+			headers: { 'Authorization': auth.token || localStorage.token }
 		});
 		const data = await res.json();
 		return data;
@@ -81,10 +83,13 @@ const UserPage = () => {
 				<div className={styles['info-panel']}>
 					<h2>Username: {userInfo.name}</h2>
 					<h2>Email: {userInfo.email}</h2>
-					{auth.userId === id && <h3>Address: {userInfo.address}</h3>}
-					<div className={styles['owner-actions']}>
-						<Link to={`/user/${id}/edit`}>Update user details</Link>
-					</div>
+					{auth.userId === id && <>
+						<h3>Address: {userInfo.address}</h3>
+						<div className={styles['owner-actions']}>
+							<Link to={`/user/${id}/edit`}>Update user details</Link>
+						</div>
+					</>
+					}
 				</div>
 				{auth.userId===id && (
 					<div className={styles['requests-panel']}>

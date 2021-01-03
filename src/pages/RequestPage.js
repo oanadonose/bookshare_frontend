@@ -77,6 +77,7 @@ const RequestPage = () => {
 			const data = await res.json();
 			console.log(data);
 			setRequestData(data);
+			setRequest({...request, message: ''});
 			return data;
 		} catch (err) {
 			console.log('err', err);
@@ -132,8 +133,6 @@ const RequestPage = () => {
 			console.log('err', err);
 		}
 	}
-	const acceptHandler = async () => {
-	}
 	return (
 		requestData ? 
 		(<div className={styles['request-page']}>
@@ -148,7 +147,7 @@ const RequestPage = () => {
 			<div className={styles['request-panel']}>
 				<div className={styles['']}>
 					<div className={styles['actions']}>
-						<h2><Link to={`/user/${requestData.user._id}`}>{requestData.user.name}</Link> requested this book.</h2>
+						<h2><Link to={`/user/${requestData.user._id}`}>{requestData.user.name}</Link> requested this book. (address: {requestData.user.address})</h2>
 						{auth.userId===requestData.user._id && !requestData.archived && requestData.status!=='closed' &&
 							<button onClick={() => cancelHandler()}>Cancel</button>
 						}
@@ -157,7 +156,7 @@ const RequestPage = () => {
 								<button onClick={() => archiveHandler()}>Archive</button>			
 						}
 						{auth.userId===requestData.book.user._id && !requestData.archived && requestData.status!=='closed'&&
-							<button onClick={() => acceptHandler()}>Accept</button>
+							<button onClick={() => cancelHandler()}>Accept</button>
 						}		
 						</div>
 					</div>
@@ -168,7 +167,7 @@ const RequestPage = () => {
 						<Input id='message'
 						type='text'
 						label='Message'
-						required='true'
+						required={true}
 						value={request.message}
 						onChangeHandler={(e) => {
 							setRequest({ ...request, message: e.target.value })
