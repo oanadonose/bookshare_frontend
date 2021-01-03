@@ -1,0 +1,61 @@
+@import "./variables.scss";
+
+.book-page {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 2em;
+
+  img {
+    margin: 1em;
+    max-width: 80vw;
+    max-height: 50vh;
+  }
+
+  .info-panel {
+    margin-left: 0.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .owner-actions {
+      margin-top: 1em;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      button {
+        margin: 0.2em;
+      }
+    }
+  }
+}
+
+.book-form {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-request-form {
+  width: 50%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-around;
+
+  input {
+    @include input-basic;
+  }
+}
+
+.requests {
+  margin: 1em;
+}

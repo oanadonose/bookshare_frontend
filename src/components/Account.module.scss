@@ -1,0 +1,33 @@
+@import "./variables.scss";
+
+.loggedin {
+  min-width: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.4em;
+
+  @media screen and (min-width: 1000px) {
+    margin-top: 0;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+}
+
+.loggedin--show {
+  display: none;
+}
+
+.logout {
+  font-size: 1.4rem;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  color: $ternary-color;
+  outline: none;
+}
+.guest {
+  min-width: 20%;
+  display: flex;
+  justify-content: space-around;
+}
